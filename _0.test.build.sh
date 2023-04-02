@@ -14,6 +14,7 @@ PROJECT_NAME=hardened-dropbear
 [[ -z "$GH_IMAGE_NAME" ]] || IMAGETAG="$GH_IMAGE_NAME":${IMAGETAG_SHORT}
 
 
+test -e dropbear-src || git clone https://github.com/mkj/dropbear.git dropbear-src
 
 mkdir builds
 startdir=$(pwd)
@@ -34,7 +35,7 @@ mkdir build
     test -e ccache.tgz && rm ccache.tgz
     docker export $(docker create --name cicache $IMAGETAG /bin/false ) |tar xv ccache.tgz ;docker rm cicache
     test -e ccache.tgz || ( mkdir .tmpempty ;echo 123 .tmpempty/file;tar cvzf ccache.tgz .tmpempty )
-    test -e dropbear-src || git clone https://github.com/mkj/dropbear.git dropbear-src
+    test -e dropbear-src || cp ${startdir}/dropbear-src .
     test -e .tmpempty && rm -rf .tmpempty
 )
 
@@ -63,7 +64,7 @@ mkdir build
     test -e ccache.tgz && rm ccache.tgz
     docker export $(docker create --name cicache $IMAGETAG /bin/false ) |tar xv ccache.tgz ;docker rm cicache
     test -e ccache.tgz || ( mkdir .tmpempty ;echo 123 .tmpempty/file;tar cvzf ccache.tgz .tmpempty )
-    test -e dropbear-src || git clone https://github.com/mkj/dropbear.git dropbear-src
+    test -e dropbear-src || cp ${startdir}/dropbear-src .
     test -e .tmpempty && rm -rf .tmpempty
 )
 
