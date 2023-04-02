@@ -1,4 +1,7 @@
 #!/bin/bash
+[[ -z "$1" ]] || IMAGETAGS=$1
+[[ -z "$2" ]] || ARCHLIST=$2
+
 [[ -z "$PLATFORMS_ALPINE" ]] || BUILD_TARGET_PLATFORMS=$PLATFORMS_ALPINE
 [[ -z "$BUILD_TARGET_PLATFORMS" ]] && BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7"
 
@@ -12,7 +15,8 @@ mkdir builds
 startdir=$(pwd)
 
 #IMAGETAG_SHORT=alpine
-for IMAGETAG_SHORT in alpine ubuntu-focal ubuntu-bionic;do
+[[ -z "$IMAGETAGS" ]] && IMAGETAGS="alpine ubuntu-focal ubuntu-bionic"
+for IMAGETAG_SHORT in $IMAGETAGS;do
 REGISTRY_HOST=ghcr.io
 REGISTRY_PROJECT=thefoundation-builder
 PROJECT_NAME=hardened-dropbear
@@ -23,7 +27,8 @@ PROJECT_NAME=hardened-dropbear
 
 
 #docker build . --progress plain -f Dockerfile.alpine -t $IMAGETAG
-for BUILDARCH in $(echo $BUILD_TARGET_PLATFORMS |sed 's/,/ /g') ;do
+[[ -z "$ARCHLIST" ]] && ARCHLIST=$(echo $BUILD_TARGET_PLATFORMS |sed 's/,/ /g') 
+for BUILDARCH in ;do
 TARGETARCH=$(_platform_tag $BUILDARCH  )
 TARGETDIR=builds/$IMAGETAG_SHORT_$TARGETARCH
 echo "building to "$TARGETDIR
