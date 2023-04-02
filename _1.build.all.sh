@@ -28,7 +28,7 @@ PROJECT_NAME=hardened-dropbear
 
 #docker build . --progress plain -f Dockerfile.alpine -t $IMAGETAG
 [[ -z "$ARCHLIST" ]] && ARCHLIST=$(echo $BUILD_TARGET_PLATFORMS |sed 's/,/ /g') 
-for BUILDARCH in ;do
+for BUILDARCH in $ARCHLIST;do
 TARGETARCH=$(_platform_tag $BUILDARCH  )
 TARGETDIR=builds/$IMAGETAG_SHORT_$TARGETARCH
 echo "building to "$TARGETDIR
