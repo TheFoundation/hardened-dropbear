@@ -109,9 +109,12 @@ jobs:
       - name: show steps
         run: echo "pushing to $CI_REGISTRY_IMAGE cached by $BUILDCACHE"
       - name: test build
-        run: bash -c "time bash _0.test.build.sh"
-      - name: test build
+        run: bash -c "time bash _0.build.test.sh"
+      - name: show builds
         run: ls -lh1 builds
+      - name: full build
+        run: bash -c "time bash _1.build.all.sh"
+
 
 #      - name: show cmd
 ###        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh base-focal "
