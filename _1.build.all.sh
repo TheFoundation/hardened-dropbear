@@ -49,7 +49,7 @@ echo time docker buildx build  --output=type=registry,push=true --push   --pull 
      docker rmi ${IMAGETAG}_${TARGETARCH}
      time docker buildx build  --output=type=registry,push=true --push  --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${BUILDARCH} --cache-to ${IMAGETAG}_${TARGETARCH}_buildcache  --cache-from ${IMAGETAG}_${TARGETARCH}_buildcache -t  ${IMAGETAG}_${TARGETARCH} $buildstring -f "${DFILENAME}" ;
      docker export $(docker create --name cicache $IMAGETAG /bin/false ) |tar xv binaries.tgz ;docker rm cicache
-     test -e binaries.tgz && mv binaries.tgz ${startdir}/hardened-dropbear.$TARGETARCH.tar.gz
+     test -e binaries.tgz && mv binaries.tgz ${startdir}/hardened-dropbear.$IMAGETAG_SHORT.$TARGETARCH.tar.gz
     ) &
      
 
@@ -57,4 +57,4 @@ done
 done
 wait 
 
-find |grep tgz |grep release || exit 1
+find |grep tar.gz |grep release || exit 1

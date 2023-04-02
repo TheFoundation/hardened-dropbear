@@ -56,7 +56,6 @@ tail -n 1 "/$beartarget/src/default_options.h"|grep -q "$(tail -n 1 /tmp/.bear_c
 
 export PREFIX=/usr
 export CC='ccache gcc'
-export HOST=bouncing-dropbear-hardened
 
 echo CONFIG
 ( cd "/$beartarget"; autoconf  &&  autoheader  &&  ccache ./configure --prefix=$PREFIX --enable-plugin  --enable-bundled-libtom  )|sed 's/$/ → /g'|tr -d '\n'  

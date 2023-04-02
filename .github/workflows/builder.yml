@@ -116,7 +116,15 @@ jobs:
         run: bash -c "time bash _1.build.all.sh"
       - name: show release files
         run: find|grep tgz |grep release
-
+      - name : dummy release file
+        run: echo "still testing" > RELEASE.md
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            RELEASE.md
+            hardened-dropbear-*.tar.gz
 #      - name: show cmd
 ###        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh base-focal "
 ##        run: echo docker buildx build --platform ${PLATFORMS}  --push --pull --cache-to=type=registry,ref=$BUILDCACHE:zzz_buildcache_${{ github.event.repository.name }} --cache-from=type=registry,ref=$BUILDCACHE:zzz_buildcache_${{ github.event.repository.name }} -t $CI_REGISTRY_IMAGE:latest  -f Dockerfile .
