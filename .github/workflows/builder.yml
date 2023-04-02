@@ -114,7 +114,8 @@ jobs:
         run: ls -lh1 builds
       - name: full build
         run: bash -c "time bash _1.build.all.sh"
-
+      - name: show release files
+        run: find|grep tgz |grep release
 
 #      - name: show cmd
 ###        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh base-focal "
