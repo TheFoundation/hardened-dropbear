@@ -131,9 +131,9 @@ jobs:
         arch: [linux_SLASH_amd64,linux_SLASH_arm64,linux_SLASH_arm_SLASH_v7]
         include:
           - os: ubuntu-bionic
-            arch: linux/386
+            arch: linux_SLASH_386
           - os: alpine
-            arch: linux/386
+            arch: linux_SLASH_386
           - os: alpine
             arch: linux_SLASH_arm_SLASH_v6
 #    runs-on: ${{ matrix.os }}
