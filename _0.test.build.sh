@@ -37,7 +37,7 @@ mkdir build
     test -e ccache.tgz && rm ccache.tgz
     docker export $(docker create --name cicache $IMAGETAG /bin/false ) |tar xv ccache.tgz ;docker rm cicache
     test -e ccache.tgz || ( mkdir .tmpempty ;echo 123 .tmpempty/file;tar cvzf ccache.tgz .tmpempty )
-    test -e dropbear-src || cp ${startdir}/dropbear-src .
+    test -e dropbear-src || cp -rauv ${startdir}/dropbear-src .
     test -e .tmpempty && rm -rf .tmpempty
 )
 
@@ -68,7 +68,7 @@ wait
 #    test -e ccache.tgz && rm ccache.tgz
 #    docker export $(docker create --name cicache $IMAGETAG /bin/false ) |tar xv ccache.tgz ;docker rm cicache
 #    test -e ccache.tgz || ( mkdir .tmpempty ;echo 123 .tmpempty/file;tar cvzf ccache.tgz .tmpempty )
-#    test -e dropbear-src || cp ${startdir}/dropbear-src .
+#    test -e dropbear-src || cp -rauv ${startdir}/dropbear-src .
 #    test -e .tmpempty && rm -rf .tmpempty
 #)
 #
