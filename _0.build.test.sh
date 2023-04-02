@@ -47,9 +47,10 @@ echo "singlearch-build for "$BUILDARCH
 echo time docker buildx build  --output=type=registry,push=true --push   --pull --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${BUILDARCH} --cache-to ${IMAGETAG}_${TARGETARCH}_buildcache  --cache-from ${IMAGETAG}_${TARGETARCH}_buildcache -t  ${IMAGETAG}_${TARGETARCH} $buildstring -f "${DFILENAME}" 
      (
     test -e binaries.tgz && rm binaries.tgz
-     docker rmi ${IMAGETAG}_${TARGETARCH}
      time docker buildx build  --output=type=registry,push=true --push  --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${BUILDARCH} --cache-to ${IMAGETAG}_${TARGETARCH}_buildcache  --cache-from ${IMAGETAG}_${TARGETARCH}_buildcache -t  ${IMAGETAG}_${TARGETARCH} $buildstring -f "${DFILENAME}" ;
-     docker export $(docker create --name cicache ${IMAGETAG}_${TARGETARCH} /bin/false ) |tar xv binaries.tgz ;docker rm cicache
+     docker rmi ${IMAGETAG}_${TARGETARCH}
+     docker export $(docker create --name cicache ${IMAGETAG}_${TARGETARCH} /bin/false ) |tar xv binaries.tgz ;docker rm cicache;docker rmi ${IMAGETAG}_${TARGETARCH}
+     test -e binaries.tgz || echo "ERROR: NO BINARIES"
      test -e binaries.tgz && mv binaries.tgz ${startdir}/hardened-dropbear-.$IMAGETAG_SHORT.$TARGETARCH.tar.gz
     ) &
      
