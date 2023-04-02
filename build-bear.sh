@@ -84,14 +84,16 @@ echo "###############################################"
 #ls "$HOME"/.ccache
 caches=$($PFX find /root/ /home/*/ -maxdepth 1 -name .ccache  -type d)
 [[ -z "$caches" ]] || (
-    echo "saving ccache"$(bash -c "$PFX tar cvzf /tmp/ccache.$(uname -m).tgz $caches"| wc -l)" files..."
-    tar cvzf /tmp/ccache.tgz /tmp/ccache.$(uname -m).tgz
+    echo "saving ccache: "$(bash -c "$PFX tar cvzf /tmp/ccache.$(uname -m).tgz $caches"| wc -l)" files..."
+    tar cvzf /ccache.tgz /tmp/ccache.$(uname -m).tgz
  )
 
 tar tvzf /binaries.tgz 
 echo  "SIZE_KBYTE:"
 du -k /binaries.tgz 
+
 test -e /ccache.tgz  && du -k /ccache.tgz 
+
 (echo "$installresult"|grep -q "install dropbear /")|| exit 222
 exit 0
 
