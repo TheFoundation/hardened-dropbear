@@ -30,7 +30,7 @@ PROJECT_NAME=hardened-dropbear
 [[ -z "$ARCHLIST" ]] && ARCHLIST=$(echo $BUILD_TARGET_PLATFORMS |sed 's/,/ /g') 
 for BUILDARCH in $ARCHLIST;do
 TARGETARCH=$(_platform_tag $BUILDARCH  )
-TARGETDIR=builds/$IMAGETAG_SHORT_$TARGETARCH
+TARGETDIR=builds/${IMAGETAG_SHORT}"_"$TARGETARCH
 echo "building to "$TARGETDIR
 mkdir -p "$TARGETDIR"
 cd "$TARGETDIR"

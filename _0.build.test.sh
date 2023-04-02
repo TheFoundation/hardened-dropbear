@@ -26,7 +26,7 @@ PROJECT_NAME=hardened-dropbear
 ALLARCH=$(_buildx_arch)
 for BUILDARCH in $ALLARCH ;do
 TARGETARCH=$(_platform_tag $BUILDARCH  )
-TARGETDIR=builds/$IMAGETAG_SHORT_$TARGETARCH
+TARGETDIR=builds/${IMAGETAG_SHORT}"_"$TARGETARCH
 echo "building to "$TARGETDIR
 mkdir -p "$TARGETDIR"
 cd "$TARGETDIR"
