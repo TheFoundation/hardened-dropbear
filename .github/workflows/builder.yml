@@ -189,7 +189,7 @@ jobs:
         with:
           name: artifact-${{ matrix.os }}-${{ matrix.arch }}
           path: upload/*gz
-          if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
+          if-no-files-found: ignore # error 'warn' or 'ignore' are also available, defaults to `warn`
           retention-days: 2
 
   finish-release:
