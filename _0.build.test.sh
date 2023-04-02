@@ -35,7 +35,7 @@ mkdir build
     cd build
     cp ${startdir}/build-bear.sh . -v
     test -e ccache.tgz && rm ccache.tgz
-    docker export $(docker create --name cicache_${IMAGETAG}_${TARGETARCH} ${IMAGETAG}_${TARGETARCH}/bin/false ) |tar xv ccache.tgz ;docker rm cicache_${IMAGETAG}_${TARGETARCH}
+    docker export $(docker create --name cicache_${IMAGETAG/:/_}_${TARGETARCH} ${IMAGETAG}_${TARGETARCH}/bin/false ) |tar xv ccache.tgz ;docker rm cicache_${IMAGETAG/:/_}_${TARGETARCH}
     test -e ccache.tgz || ( mkdir .tmpempty ;echo 123 .tmpempty/file;tar cvzf ccache.tgz .tmpempty )
     test -e dropbear-src || cp -rau ${startdir}/dropbear-src .
     test -e .tmpempty && rm -rf .tmpempty
@@ -49,7 +49,7 @@ echo time docker buildx build  --output=type=registry,push=true --push   --pull 
     test -e binaries.tgz && rm binaries.tgz
      time docker buildx build  --output=type=registry,push=true --push  --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${BUILDARCH} --cache-to ${IMAGETAG}_${TARGETARCH}_buildcache  --cache-from ${IMAGETAG}_${TARGETARCH}_buildcache -t  ${IMAGETAG}_${TARGETARCH} $buildstring -f "${DFILENAME}" ;
      docker rmi ${IMAGETAG}_${TARGETARCH}
-     docker export $(docker create --name cicache_${IMAGETAG}_${TARGETARCH} ${IMAGETAG}_${TARGETARCH} /bin/false ) |tar xv binaries.tgz ;docker rm cicache_${IMAGETAG}_${TARGETARCH};docker rmi ${IMAGETAG}_${TARGETARCH}
+     docker export $(docker create --name cicache_${IMAGETAG/:/_}_${TARGETARCH} ${IMAGETAG}_${TARGETARCH} /bin/false ) |tar xv binaries.tgz ;docker rm cicache_${IMAGETAG/:/_}_${TARGETARCH};docker rmi ${IMAGETAG}_${TARGETARCH}
      test -e binaries.tgz || echo "ERROR: NO BINARIES"
      test -e binaries.tgz && mv binaries.tgz ${startdir}/hardened-dropbear-.$IMAGETAG_SHORT.$TARGETARCH.tar.gz
     ) &
@@ -74,7 +74,7 @@ wait
 #    cd build
 #    cp ${startdir}/build-bear.sh . -v
 #    test -e ccache.tgz && rm ccache.tgz
-#    docker export $(docker create --name cicache_${IMAGETAG}_${TARGETARCH} $IMAGETAG /bin/false ) |tar xv ccache.tgz ;docker rm cicache_${IMAGETAG}_${TARGETARCH}
+#    docker export $(docker create --name cicache_${IMAGETAG/:/_}_${TARGETARCH} $IMAGETAG /bin/false ) |tar xv ccache.tgz ;docker rm cicache_${IMAGETAG/:/_}_${TARGETARCH}
 #    test -e ccache.tgz || ( mkdir .tmpempty ;echo 123 .tmpempty/file;tar cvzf ccache.tgz .tmpempty )
 #    test -e dropbear-src || cp -rau ${startdir}/dropbear-src .
 #    test -e .tmpempty && rm -rf .tmpempty
@@ -88,7 +88,7 @@ wait
 #    test -e binaries.tgz && rm binaries.tgz
 #     docker rmi ${IMAGETAG}_${TARGETARCH}
 #     time docker buildx build  --output=type=registry,push=true --push  --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${BUILDARCH} --cache-to ${IMAGETAG}_${TARGETARCH}_buildcache  --cache-from ${IMAGETAG}_${TARGETARCH}_buildcache -t  ${IMAGETAG}_${TARGETARCH} $buildstring -f "${DFILENAME}" ;
-#     docker export $(docker create --name cicache_${IMAGETAG}_${TARGETARCH} $IMAGETAG /bin/false ) |tar xv binaries.tgz ;docker rm cicache_${IMAGETAG}_${TARGETARCH}
+#     docker export $(docker create --name cicache_${IMAGETAG/:/_}_${TARGETARCH} $IMAGETAG /bin/false ) |tar xv binaries.tgz ;docker rm cicache_${IMAGETAG/:/_}_${TARGETARCH}
 #     test -e binaries.tgz && mv binaries.tgz ${startdir}/hardened-dropbear.$TARGETARCH.tar.gz
 #    ) &
 #done
