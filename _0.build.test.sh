@@ -51,7 +51,7 @@ echo time docker buildx build  --output=type=registry,push=true --push   --pull 
      docker rmi ${IMAGETAG}_${TARGETARCH}
      docker export $(docker create --name cicache_${IMAGETAG//[:\/]/_}_${TARGETARCH} ${IMAGETAG}_${TARGETARCH} /bin/false ) |tar xv binaries.tgz ;docker rm cicache_${IMAGETAG//[:\/]/_}_${TARGETARCH};docker rmi ${IMAGETAG}_${TARGETARCH}
      test -e binaries.tgz || echo "ERROR: NO BINARIES"
-     test -e binaries.tgz && mv binaries.tgz ${startdir}/hardened-dropbear-.$IMAGETAG_SHORT.$TARGETARCH.tar.gz
+     test -e binaries.tgz && mv binaries.tgz ${startdir}/hardened-dropbear-$IMAGETAG_SHORT.$TARGETARCH.tar.gz
     ) &
      
 
