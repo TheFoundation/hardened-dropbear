@@ -115,13 +115,14 @@ jobs:
         run: find|grep tgz |grep release
 
   build_matrix:
+    needs: build-base
     strategy:
       matrix:
         os: [alpine, ubuntu-focal, ubuntu-bionic]
         arch: [linux/amd64,linux/arm64,linux/arm/v7]
         exclude:
           - os: ubuntu-bionic
-            arch: i386
+            arch: linux/i386
 #    runs-on: ${{ matrix.os }}
     runs-on: ubuntu-latest
     container: ghcr.io/thefoundation-builder/docker-with-buildx:latest
@@ -163,13 +164,9 @@ jobs:
       - name: current images
         run: docker image ls
       - name: show steps
-        run: echo "pushing to $CI_REGISTRY_IMAGE cached by $BUILDCACHE"
+        run: echo "pushing to $CI_REGISTRY_IMAGE cached by $BUILDCACHE WITH time bash _1.build.all.sh ${{ matrix.os }} ${{ matrix.arch }}"
       - name: full build
         run: bash -c "time bash _1.build.all.sh ${{ matrix.os }} ${{ matrix.arch }} " 
-
-
-
-
       - name: show release files
         run: find|grep tgz |grep release
 
