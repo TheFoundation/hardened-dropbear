@@ -1,6 +1,7 @@
 #!/bin/bash
 [[ -z "$1" ]] || IMAGETAGS=$1
-[[ -z "$2" ]] || ARCHLIST=$2
+[[ -z "$2" ]] || ARCHLIST=$( echo "$2"|sed 's~_SLASH_~/~g')
+
 
 [[ -z "$PLATFORMS_ALPINE" ]] || BUILD_TARGET_PLATFORMS=$PLATFORMS_ALPINE
 [[ -z "$BUILD_TARGET_PLATFORMS" ]] && BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7"

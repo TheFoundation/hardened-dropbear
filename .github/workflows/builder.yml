@@ -128,7 +128,7 @@ jobs:
     strategy:
       matrix:
         os: [alpine, ubuntu-focal, ubuntu-bionic]
-        arch: [linux/amd64,linux/arm64,linux/arm/v7]
+        arch: [linux_SLASH_amd64,linux_SLASH_arm64,linux_SLASH_arm_SLASH_v7]
         exclude:
           - os: ubuntu-bionic
             arch: linux/i386
