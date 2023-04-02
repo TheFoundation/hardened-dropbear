@@ -93,5 +93,5 @@ wait
 #    ) &
 #done
 #wait
-
+cd "${startdir}"
 find |grep tar.gz |grep hardened-dropbear || exit 1
