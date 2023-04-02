@@ -49,7 +49,7 @@ echo -n replacing" " && for var in $(cut -d" " -f2 /tmp/.bear_configvars);do
         )
 
 test -e /tmp/.beardef.h || exit 20
-9
+
 ( cat /tmp/.beardef.h  /tmp/.bear_configvars  ) >  $beartarget/src/default_options.h 
 tail -n 1 "/$beartarget/src/default_options.h"|grep -q "$(tail -n 1 /tmp/.bear_configvars)" || echo "SNIPPET NOT FOUND..exit"
 tail -n 1 "/$beartarget/src/default_options.h"|grep -q "$(tail -n 1 /tmp/.bear_configvars)" || exit 30
