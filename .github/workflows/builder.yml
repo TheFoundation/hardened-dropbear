@@ -127,11 +127,15 @@ jobs:
     needs: build-base
     strategy:
       matrix:
-        os: [alpine, ubuntu-focal, ubuntu-bionic]
+        os: [alpine, ubuntu-focal, ubuntu-bionic, ubuntu-jammy]
         arch: [linux_SLASH_amd64,linux_SLASH_arm64,linux_SLASH_arm_SLASH_v7]
-        exclude:
+        include:
           - os: ubuntu-bionic
-            arch: linux/i386
+            arch: linux/386
+          - os: alpine
+            arch: linux/386
+          - os: alpine
+            arch: linux_SLASH_arm_SLASH_v6
 #    runs-on: ${{ matrix.os }}
     runs-on: ubuntu-latest
     container: ghcr.io/thefoundation-builder/docker-with-buildx:latest
