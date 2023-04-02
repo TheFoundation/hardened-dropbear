@@ -73,7 +73,7 @@ echo "###############################################"
 
 KEEPFILES=$(echo "$installresult"|grep ^install|grep -v '^install -'|while read line;do file=$(echo "$line"|cut -d" " -f2);dir=$(echo "$line"|cut -d" " -f3);echo $dir"/"$file;done )
 echo "$KEEPFILES"
-$PFX tar cvzf /binaries.tgz $KEEPFILES
+[[ -z "$KEEPFILES" ]] || $PFX tar cvzf /binaries.tgz $KEEPFILES
 
 [[ "$(id -u)" = "0" ]] &&  [[ -z "$HOME" ]] && HOME="/root"
 test -e /ccache.tgz  && rm /ccache.tgz  
