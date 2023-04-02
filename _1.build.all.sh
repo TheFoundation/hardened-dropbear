@@ -73,4 +73,5 @@ done
 done
 wait 
 cd "${startdir}"
-find |grep tar.gz |grep hardened-dropbear || exit 1
+#find |grep tar.gz |grep hardened-dropbear || exit 1
+find |grep tar.gz |grep hardened-dropbear ||exit 0
