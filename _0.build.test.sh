@@ -35,7 +35,7 @@ mkdir build
     cd build
     cp ${startdir}/build-bear.sh . -v
     test -e ccache.tgz && rm ccache.tgz
-    docker export $(docker create --name cicache_${IMAGETAG//[:\/]/_}_${TARGETARCH} ${IMAGETAG}_${TARGETARCH}/bin/false ) |tar xv ccache.tgz ;docker rm cicache_${IMAGETAG//[:\/]/_}_${TARGETARCH}
+    docker export $(docker create --name cicache_${IMAGETAG//[:\/]/_}_${TARGETARCH} ${IMAGETAG}_${TARGETARCH} /bin/false ) |tar xv ccache.tgz ;docker rm cicache_${IMAGETAG//[:\/]/_}_${TARGETARCH}
     test -e ccache.tgz || ( mkdir .tmpempty ;echo 123 .tmpempty/file;tar cvzf ccache.tgz .tmpempty )
     test -e dropbear-src || cp -rau ${startdir}/dropbear-src .
     test -e .tmpempty && rm -rf .tmpempty
