@@ -49,7 +49,7 @@ echo -n replacing" " && for var in $(cut -d" " -f2 /tmp/.bear_configvars);do
         )
 
 test -e /tmp/.beardef.h || exit 20
-
+9
 ( cat /tmp/.beardef.h  /tmp/.bear_configvars  ) >  $beartarget/src/default_options.h 
 tail -n 1 "/$beartarget/src/default_options.h"|grep -q "$(tail -n 1 /tmp/.bear_configvars)" || echo "SNIPPET NOT FOUND..exit"
 tail -n 1 "/$beartarget/src/default_options.h"|grep -q "$(tail -n 1 /tmp/.bear_configvars)" || exit 30
@@ -83,15 +83,16 @@ echo "###############################################"
 #echo "$HOME" 
 #ls "$HOME"/.ccache
 caches=$($PFX find /root/ /home/*/ -maxdepth 1 -name .ccache  -type d)
-[[ -z "$caches" ]] || (echo "saving ccache"$(bash -c "$PFX tar cvzf /tmp/ccache.$(uname -m).tgz $caches"| wc -l)" files..."
-tar cvzf /tmp/ccache.tgz /tmp/ccache.$(uname -m).tgz
+[[ -z "$caches" ]] || (
+    echo "saving ccache"$(bash -c "$PFX tar cvzf /tmp/ccache.$(uname -m).tgz $caches"| wc -l)" files..."
+    tar cvzf /tmp/ccache.tgz /tmp/ccache.$(uname -m).tgz
  )
 
 tar tvzf /binaries.tgz 
 echo  "SIZE_KBYTE:"
 du -k /binaries.tgz 
 test -e /ccache.tgz  && du -k /ccache.tgz 
-echo "$installresult"|grep -q "install dropbear /"|| exit 222
+(echo "$installresult"|grep -q "install dropbear /")|| exit 222
 exit 0
 
 # || exit 222

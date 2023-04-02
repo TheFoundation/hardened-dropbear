@@ -57,4 +57,4 @@ done
 done
 wait 
 
-find |grep tar.gz |grep release || exit 1
+find |grep tar.gz |grep hardened-dropbear || exit 1
