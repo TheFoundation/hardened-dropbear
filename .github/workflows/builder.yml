@@ -209,8 +209,9 @@ jobs:
             RELEASE.md
             hardened-dropbear-*.tar.gz
       - uses: geekyeggo/delete-artifact@v2
-        failOnError: false
+        name: delete artifacts
         with:
+            failOnError: false
             name: |
                 artifact-*
                 release-*
