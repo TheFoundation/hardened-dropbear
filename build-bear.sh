@@ -1,6 +1,6 @@
 #!/bin/bash
 test -e /ccache.tgz  && ( echo  "loading ccache "$(cd / ;tar xvzf /ccache.tgz|wc -l )"... files" )
-
+test -e /tmp/ccache.$(uname -m).tgz && ( echo "loading arch cache"$(cd / ;tar xvzf /tmp/ccache.$(uname -m).tgz|wc -l )"... files" )
 test -e "$HOME"/.ccache||mkdir "$HOME"/.ccache
 test -e "$HOME"/.ccache/ccache.conf || ( echo 'max_size = 1.0G' >> "$HOME"/.ccache/ccache.conf )
 which apk && apk add ccache gcc make autoconf ca-certificates git zlib-dev libc-dev
@@ -84,7 +84,9 @@ echo "###############################################"
 #echo "$HOME" 
 #ls "$HOME"/.ccache
 caches=$($PFX find /root/ /home/*/ -maxdepth 1 -name .ccache  -type d)
-[[ -z "$caches" ]] || (echo "saving ccache"$(bash -c "$PFX tar cvzf /ccache.tgz $caches"| wc -l)" files..." )
+[[ -z "$caches" ]] || (echo "saving ccache"$(bash -c "$PFX tar cvzf /tmp/ccache.$(uname -m).tgz $caches"| wc -l)" files..."
+tar cvzf /tmp/ccache.tgz /tmp/ccache.$(uname -m).tgz
+ )
 
 tar tvzf /binaries.tgz 
 echo  "SIZE_KBYTE:"
