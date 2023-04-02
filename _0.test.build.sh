@@ -45,12 +45,19 @@ buildstring=build
 DFILENAME=$startdir/Dockerfile.${IMAGETAG_SHORT}
 echo "singlearch-build for "$BUILDARCH
 echo time docker buildx build  --output=type=registry,push=true --push   --pull --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${BUILDARCH} --cache-to ${IMAGETAG}_${TARGETARCH}_buildcache  --cache-from ${IMAGETAG}_${TARGETARCH}_buildcache -t  ${IMAGETAG}_${TARGETARCH} $buildstring -f "${DFILENAME}" 
-     time docker buildx build  --output=type=registry,push=true --push   --pull --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${BUILDARCH} --cache-to ${IMAGETAG}_${TARGETARCH}_buildcache  --cache-from ${IMAGETAG}_${TARGETARCH}_buildcache -t  ${IMAGETAG}_${TARGETARCH} $buildstring -f "${DFILENAME}"  &
-
+     (
+    test -e binaries.tgz && rm binaries.tgz
+     docker rmi ${IMAGETAG}_${TARGETARCH}
+     time docker buildx build  --output=type=registry,push=true --push  --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${BUILDARCH} --cache-to ${IMAGETAG}_${TARGETARCH}_buildcache  --cache-from ${IMAGETAG}_${TARGETARCH}_buildcache -t  ${IMAGETAG}_${TARGETARCH} $buildstring -f "${DFILENAME}" ;
+     docker export $(docker create --name cicache $IMAGETAG /bin/false ) |tar xv binaries.tgz ;docker rm cicache
+     test -e binaries.tgz && mv binaries.tgz ${startdir}/hardened-dropbear.$TARGETARCH.tar.gz
+    ) &
+     
 
 done
 done
 wait 
+
 #TARGETARCH=$BUILD_TARGET_PLATFORMS
 
 #time docker buildx build  --output=type=registry,push=true  --push  --pull --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${TARGETARCH} --cache-from ${IMAGETAG} -t  ${IMAGETAG} $buildstring -f "${DFILENAME}" 
@@ -76,7 +83,14 @@ wait
 #DFILENAME=$startdir/Dockerfile.alpine
 #echo "build for "$BUILDARCH
 #echo time docker buildx build  --output=type=registry,push=true --push   --pull --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${BUILDARCH} --cache-to ${IMAGETAG}_${TARGETARCH}_buildcache  --cache-from ${IMAGETAG}_${TARGETARCH}_buildcache -t  ${IMAGETAG}_${TARGETARCH} $buildstring -f "${DFILENAME}" 
-#time docker buildx build  --output=type=registry,push=true --push   --pull --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${BUILDARCH} --cache-to ${IMAGETAG}_${TARGETARCH}_buildcache  --cache-from ${IMAGETAG}_${TARGETARCH}_buildcache -t  ${IMAGETAG}_${TARGETARCH} $buildstring -f "${DFILENAME}" &
-#
+#     (
+#    test -e binaries.tgz && rm binaries.tgz
+#     docker rmi ${IMAGETAG}_${TARGETARCH}
+#     time docker buildx build  --output=type=registry,push=true --push  --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${BUILDARCH} --cache-to ${IMAGETAG}_${TARGETARCH}_buildcache  --cache-from ${IMAGETAG}_${TARGETARCH}_buildcache -t  ${IMAGETAG}_${TARGETARCH} $buildstring -f "${DFILENAME}" ;
+#     docker export $(docker create --name cicache $IMAGETAG /bin/false ) |tar xv binaries.tgz ;docker rm cicache
+#     test -e binaries.tgz && mv binaries.tgz ${startdir}/hardened-dropbear.$TARGETARCH.tar.gz
+#    ) &
 #done
 #wait
+
+find |grep tgz |grep release || exit 1
