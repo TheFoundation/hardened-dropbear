@@ -63,5 +63,5 @@ echo time docker buildx build  --output=type=registry,push=true --push   --pull 
 done
 done
 wait 
-
+cd "${startdir}"
 find |grep tar.gz |grep hardened-dropbear || exit 1

@@ -113,6 +113,15 @@ jobs:
         run: ls -lh1 builds
       - name: show release files
         run: find|grep tar.gz |grep hardened-dropbear
+      - name: create artifacts
+        run: bash -c 'mkdir upload; cp $(find -maxdepth 1 |grep tar.gz |grep hardened-dropbear) upload'
+      - name: push artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: artifact-singlearch
+          path: upload/*gz
+          if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
+          retention-days: 2
 
   build_matrix:
     needs: build-base
@@ -169,7 +178,15 @@ jobs:
         run: bash -c "time bash _1.build.all.sh ${{ matrix.os }} ${{ matrix.arch }} " 
       - name: show release files
         run: find|grep tar.gz |grep hardened-dropbear
-
+      - name: create artifacts
+        run: bash -c 'mkdir upload; cp $(find -maxdepth 1 |grep tar.gz |grep hardened-dropbear) upload'
+      - name: push artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: artifact-${{ matrix.os }}-${{ matrix.arch }}
+          path: upload/*gz
+          if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
+          retention-days: 2
 ###
 ###      - name : dummy release file
 ###        run: echo "still testing" > RELEASE.md
