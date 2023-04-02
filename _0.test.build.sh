@@ -16,6 +16,7 @@ PROJECT_NAME=hardened-dropbear
 
 
 mkdir builds
+startdir=$(pwd)
 
 
 #docker build . --progress plain -f Dockerfile.alpine -t $IMAGETAG
@@ -25,7 +26,6 @@ TARGETARCH=$(_platform_tag $BUILDARCH  )
 TARGETDIR=builds/$TARGETARCH
 echo "building to "$TARGETDIR
 mkdir -p "$TARGETDIR"
-startdir=$(pwd)
 cd "$TARGETDIR"
 mkdir build
 (
@@ -55,7 +55,6 @@ TARGETARCH=$(_platform_tag $BUILDARCH  )
 TARGETDIR=builds/$TARGETARCH
 echo "building to "$TARGETDIR
 mkdir -p "$TARGETDIR"
-startdir=$(pwd)
 cd "$TARGETDIR"
 mkdir build
 (
