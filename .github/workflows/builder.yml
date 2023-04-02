@@ -112,7 +112,7 @@ jobs:
       - name: show builds
         run: ls -lh1 builds
       - name: show release files
-        run: find|grep tar.gr |grep hardened-dropbear
+        run: find|grep tar.gz |grep hardened-dropbear
 
   build_matrix:
     needs: build-base
@@ -168,7 +168,7 @@ jobs:
       - name: full build
         run: bash -c "time bash _1.build.all.sh ${{ matrix.os }} ${{ matrix.arch }} " 
       - name: show release files
-        run: find|grep tar.gr |grep hardened-dropbear
+        run: find|grep tar.gz |grep hardened-dropbear
 
 ###
 ###      - name : dummy release file
