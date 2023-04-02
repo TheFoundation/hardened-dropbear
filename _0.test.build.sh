@@ -12,7 +12,7 @@ mkdir builds
 startdir=$(pwd)
 
 #IMAGETAG_SHORT=alpine
-for IMAGETAG_SHORT in alpine ubuntu-focal ubuntu-bionic
+for IMAGETAG_SHORT in alpine ubuntu-focal ubuntu-bionic;do
 REGISTRY_HOST=ghcr.io
 REGISTRY_PROJECT=thefoundation-builder
 PROJECT_NAME=hardened-dropbear
