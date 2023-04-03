@@ -38,33 +38,36 @@ env:
 jobs:
   # Push image to GitHub Packages.
   # See also https://docs.docker.com/docker-hub/builds/
-######  upstream:
-######    runs-on: ubuntu-latest
-######    environment: build
-######    permissions:
-######      packages: read
-######      contents: read
-######    if: github.repository_owner == 'TheFoundation'
-######    steps:
-######      - uses: actions/checkout@v3
-######      - name: prep-downstream
-######        run: |
-######             mkdir downstream
-######             cp -aurv _build_hocker.sh .github downstream &
-######             tar cv . |md5sum |cut -d" " -f1 > downstream/.md5sum_of_tar
-######             bash build/_generate_downstream_readme.sh thefoundation-builder hocker-builder-github > downstream/README.md
-######             wait
-#######      - uses: cpina/github-action-push-to-another-repository@main
-######      - uses: TheFoundation/github-action-push-to-another-repository@main
-######        env:
-######          SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
-#######          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
-######        with:
-######          source-directory: 'downstream'
-######          destination-github-username: 'thefoundation-builder'
-######          destination-repository-name: 'hocker-builder-github'
-######          user-email: actions@github.com
-######          target-branch: main
+  upstream:
+    runs-on: ubuntu-latest
+    container: quay.io/thefoundation/library:docker-with-buildx
+    environment: build
+    permissions:
+      packages: read
+      contents: read
+    ## ONLY on https://github.com/thefoundation/ -> push to the builder repo
+    if: github.repository_owner == 'TheFoundation'
+    steps:
+      - uses: actions/checkout@v3
+      - name: prep-downstream
+        run: |
+             mkdir downstream
+             tar cv . |md5sum |cut -d" " -f1 > downstream/.md5sum_of_tar
+             cp -aurv * .github downstream &
+             wait
+             (echo "# Builder FOR  https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }} ";echo ;cat README.md )> downstream/README.md
+#      - uses: cpina/github-action-push-to-another-repository@main
+      - uses: TheFoundation/github-action-push-to-another-repository@main
+        env:
+          SSH_DEPLOY_KEY: ${{ secrets.SYNC_PUSH_KEY }}
+#          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+        with:
+          source-directory: 'downstream'
+          destination-github-username: 'TheFoundation'
+          destination-repository-name: 'hardened-dropbear'
+          user-email: actions@github.com
+#          user-email: github@committing.8shield.net
+          target-branch: main
   build-base:
     runs-on: ubuntu-latest
     container: ghcr.io/thefoundation-builder/docker-with-buildx:latest
@@ -78,7 +81,7 @@ jobs:
     permissions:
       packages: write
       contents: read
-    if: github.repository_owner == 'thefoundation'
+    if: github.repository_owner == 'thefoundation-builder'
     steps:
       - name: Show sources and Targets
         run: |
@@ -200,6 +203,7 @@ jobs:
     permissions:
       contents: write
     container: ghcr.io/thefoundation-builder/docker-with-buildx:latest
+    if: github.repository_owner == 'thefoundation-builder'
     steps:
       - name: Download all workflow run artifacts
         uses: actions/download-artifact@v3
@@ -222,6 +226,8 @@ jobs:
           name: Hardened Dropbear ${{ steps.tag_name.outputs.release_name }}
           artifacts: "hardened-dropbear-*.tar.gz"
           bodyFile: "RELEASE.md"
+          repo: thefoundation/hardened-dropbear
+          token: ${{ secrets.RELEASE_TOKEN }}
 #      - name: Release
 #        uses: softprops/action-gh-release@v1
 #        #if: startsWith(github.ref, 'refs/tags/')

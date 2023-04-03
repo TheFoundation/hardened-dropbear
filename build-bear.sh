@@ -85,7 +85,7 @@ echo "###############################################"
 caches=$($PFX find /root/ /home/*/ -maxdepth 1 -name .ccache  -type d)
 [[ -z "$caches" ]] || (
     echo "saving ccache: "$(bash -c "$PFX tar cvzf /tmp/ccache."$(uname -m)".tgz $caches"| wc -l)" files..."
-    tar cvzf /ccache.tgz "$beartarget" /tmp/ccache.$(uname -m).tgz
+    echo "saving buildcache: "$(tar cvzf /ccache.tgz "$beartarget" /tmp/ccache.$(uname -m).tgz| wc -l)" files..."
  )
 
 tar tvzf /binaries.tgz 
