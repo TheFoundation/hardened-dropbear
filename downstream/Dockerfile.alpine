@@ -1,0 +1,6 @@
+FROM alpine:latest
+RUN apk add gcc g++ make autoconf ca-certificates git zlib-dev libc-dev bash 
+COPY dropbear-src /usr/src/dropbear
+COPY build-bear.sh /etc/build-bear.sh
+COPY ccache.tgz /ccache.tgz
+RUN bash -c "time bash /etc/build-bear.sh" &&  rm -rf /usr/src/dropbear && apk del gcc make autoconf ca-certificates git zlib-dev libc-dev
