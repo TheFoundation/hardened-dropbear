@@ -215,7 +215,7 @@ jobs:
         id: tag
         run: echo "release_tag=v$(date +"%Y.%m.%d_%H-%M")" >> $GITHUB_OUTPUT
       - name : dummy release file
-        run: (echo "#Hardened Dropbear a.k.a. Bouncing Dropbear";echo;echo "### Version ${{ steps.tag.outputs.release_tag }} "; echo "* The tar.gz files contain only the binaries an are generated from / ";echo "* Refer to github.com/${{ github.repository_owner }}/${{ github.event.repository.name }} for the source code ";echo "The Docker build images are at ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}" )  > RELEASE.md
+        run: (echo "#Hardened Dropbear a.k.a. Bouncing Dropbear";echo;echo "### Version ${{ steps.tag.outputs.release_tag }} "; echo "* The tar.gz files contain only the binaries an are generated from / ";echo "* Refer to github.com/${{ github.repository_owner }}/${{ github.event.repository.name }} for the source code ";echo "* The Docker build images are at ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}" )  > RELEASE.md
       - name: Release
         uses: ncipollo/release-action@v1
         with:
