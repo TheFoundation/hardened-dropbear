@@ -16,8 +16,8 @@ for IMAGETAG_SHORT in alpine ubuntu-focal ubuntu-bionic;do
 REGISTRY_HOST=ghcr.io
 REGISTRY_PROJECT=thefoundation-builder
 PROJECT_NAME=hardened-dropbear
-[[ -z "$GH_IMAGE_NAME" ]] && IMAGETAG=${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}
-[[ -z "$GH_IMAGE_NAME" ]] || IMAGETAG="$GH_IMAGE_NAME":${IMAGETAG_SHORT}
+[[ -z "$GH_IMAGE_NAME" ]] && IMAGETAG=$( echo "${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}" |tr  '[:upper:]' '[:lower:]' )
+[[ -z "$GH_IMAGE_NAME" ]] || IMAGETAG=$( echo $GH_IMAGE_NAME":"${IMAGETAG_SHORT} |tr  '[:upper:]' '[:lower:]' )
 
 
 
