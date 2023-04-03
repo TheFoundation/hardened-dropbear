@@ -78,7 +78,7 @@ jobs:
     permissions:
       packages: write
       contents: read
-    if: github.repository_owner == 'thefoundation-builder'
+    if: github.repository_owner == 'thefoundation'
     steps:
       - name: Show sources and Targets
         run: |
