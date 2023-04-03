@@ -61,7 +61,7 @@ echo time docker buildx build  --output=type=registry,push=true --push   --pull 
      mkdir  builder_baseimage/build
      mv "${DFILENAME}_baseimage" builder_baseimage/"${DFILENAME}_baseimage"
      (   cd builder_baseimage/;   time docker buildx build  --output=type=registry,push=true --push  --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${BUILDARCH} --cache-to ${IMAGETAG}_${TARGETARCH}_buildcache_baseimage --cache-from ${IMAGETAG}_${TARGETARCH}_buildcache_baseimage --cache-from ${IMAGETAG}_${TARGETARCH}_buildcache -t  ${IMAGETAG}_${TARGETARCH}_baseimage $buildstring -f "${DFILENAME}_baseimage" )
-     
+     rm -rf builder_baseimage 
      # second image name _builder is the full thingy ( will be large . .)
      ( echo "FROM ${IMAGETAG}_${TARGETARCH}_baseimage";grep -v -e ^FROM -e "apk add" -e "apt " -e "apt-get" "${DFILENAME}")  > "${DFILENAME}_real" 
      
