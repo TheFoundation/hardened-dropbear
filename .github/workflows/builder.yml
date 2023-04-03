@@ -128,14 +128,15 @@ jobs:
     strategy:
       matrix:
         os: [alpine, ubuntu-focal, ubuntu-bionic, ubuntu-jammy]
-        arch: [linux_SLASH_amd64,linux_SLASH_arm64,linux_SLASH_arm_SLASH_v7,linux_SLASH_s390x,linux_SLASH_ppc64le]
+        arch: [linux_SLASH_amd64]
+        #arch: [linux_SLASH_amd64,linux_SLASH_arm64,linux_SLASH_arm_SLASH_v7,linux_SLASH_s390x,linux_SLASH_ppc64le]
         include:
           - os: ubuntu-bionic
             arch: linux_SLASH_386
-          - os: alpine
-            arch: linux_SLASH_386
-          - os: alpine
-            arch: linux_SLASH_arm_SLASH_v6
+          #- os: alpine
+          #  arch: linux_SLASH_386
+          #- os: alpine
+          #  arch: linux_SLASH_arm_SLASH_v6
 
 #    runs-on: ${{ matrix.os }}
     runs-on: ubuntu-latest
@@ -216,6 +217,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         #if: startsWith(github.ref, 'refs/tags/')
         with:
+          tag_name: ${{ steps.tag.outputs.name }}
           files: |
             RELEASE.md
             hardened-dropbear-*.tar.gz
