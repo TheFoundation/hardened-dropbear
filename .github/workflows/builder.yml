@@ -130,18 +130,18 @@ jobs:
   build_matrix:
     needs: build-base
     strategy:
-      max-parallel: 14
+      max-parallel: 18
       matrix:
-        os: [alpine, ubuntu-focal, ubuntu-bionic, ubuntu-jammy]
+        os: [ubuntu-focal, ubuntu-bionic, ubuntu-jammy, alpine]
         arch: [linux_SLASH_amd64,linux_SLASH_arm64,linux_SLASH_arm_SLASH_v7,linux_SLASH_s390x,linux_SLASH_ppc64le]
         #arch: [linux_SLASH_amd64]
         include:
-          - os: ubuntu-bionic
-            arch: linux_SLASH_386
           - os: alpine
             arch: linux_SLASH_386
           - os: alpine
             arch: linux_SLASH_arm_SLASH_v6
+          - os: ubuntu-bionic
+            arch: linux_SLASH_386
 #    runs-on: ${{ matrix.os }}
     runs-on: ubuntu-latest
     container: ghcr.io/thefoundation-builder/docker-with-buildx:latest
