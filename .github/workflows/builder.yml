@@ -268,14 +268,7 @@ jobs:
                 artifact-*
                 release-*
                 output
-      - uses: actions/delete-package-versions@v4
-        name: delete untagged containers
-        with: 
-          package-name: "${{ github.event.repository.name }}"
-          package-type: 'container'
-          min-versions-to-keep: 0
-          delete-only-untagged-versions: 'true'
-          ignore-versions: '.*(buildcache|baseimage|builder)(|.*)'
+
 ####      - name: show cmd
 ######        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh base-focal "
 #####        run: echo docker buildx build --platform ${PLATFORMS}  --push --pull --cache-to=type=registry,ref=$BUILDCACHE:zzz_buildcache_${{ github.event.repository.name }} --cache-from=type=registry,ref=$BUILDCACHE:zzz_buildcache_${{ github.event.repository.name }} -t $CI_REGISTRY_IMAGE:latest  -f Dockerfile .
@@ -327,7 +320,7 @@ jobs:
         with: 
           package-name: "${{ github.event.repository.name }}"
           package-type: 'container'
-          min-versions-to-keep: 23
+          min-versions-to-keep: 4
           delete-only-untagged-versions: 'false'
           ignore-versions: '.*(buildcache|baseimage|builder)(|.*)'
 
