@@ -83,9 +83,29 @@ jobs:
       contents: read
     if: github.repository_owner == 'thefoundation-builder'
     steps:
-      - name: Show sources and Targets
-        run: |
-              echo "BUILDCACHE: $BUILDCACHE"
+#      - name: Show sources and Targets
+#        run: |
+#              echo "BUILDCACHE: $BUILDCACHE"
+      - uses: actions/delete-package-versions@v4
+        with: 
+          package-name: 'hardened-dropbear'
+          package-type: 'container'
+          min-versions-to-keep: 1
+          delete-only-untagged-versions: 'true'
+      - uses: actions/delete-package-versions@v4
+        with: 
+          package-name: 'hardened-dropbear'
+          package-type: 'container'
+          min-versions-to-keep: 0
+          delete-only-untagged-versions: 'false'
+          ignore-versions: '.*(buildcache|baseimage)'
+      - uses: actions/delete-package-versions@v4
+        with: 
+          package-name: 'hardened-dropbear'
+          package-type: 'container'
+          min-versions-to-keep: 1
+          delete-only-untagged-versions: 'false'
+          ignore-versions: '.*(^buildcache|^baseimage)'
       - uses: actions/checkout@v3
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
