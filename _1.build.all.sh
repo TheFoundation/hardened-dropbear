@@ -40,10 +40,10 @@ mkdir build
     cd build
     cp ${startdir}/build-bear.sh . -v
     test -e ccache.tgz && rm ccache.tgz
-    docker export $(docker create --name cicache_${IMAGETAG//[:\/]/_}_${TARGETARCH} ${IMAGETAG}_${TARGETARCH} /bin/false ) |tar xv ccache.tgz ;docker rm cicache_${IMAGETAG//[:\/]/_}_${TARGETARCH}
-     test -e ccache.tgz ||    (  (echo FROM ${IMAGETAG}_${TARGETARCH};echo RUN echo yocacheme) | time docker buildx build  --output=type=local,dest=/tmp/buildout_${IMAGETAG}_${TARGETARCH}  --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${BUILDARCH}   --cache-from ${IMAGETAG}_${TARGETARCH}_buildcache -t  ${IMAGETAG}_${TARGETARCH} $buildstring -f - ) ;
-     test -e /tmp/buildout_${IMAGETAG}_${TARGETARCH} && test -e /tmp/buildout_${IMAGETAG}_${TARGETARCH}/ccache.tgz && mv /tmp/buildout_${IMAGETAG}_${TARGETARCH}/ccache.tgz .
-     test -e /tmp/buildout_${IMAGETAG}_${TARGETARCH} && rm -rf "/tmp/buildout_${IMAGETAG}_${TARGETARCH}"    
+    docker export $(docker create --name cicache_${IMAGETAG//[:\/]/_}_${TARGETARCH} ${IMAGETAG}_${TARGETARCH}_builder /bin/false ) |tar xv ccache.tgz ;docker rm cicache_${IMAGETAG//[:\/]/_}_${TARGETARCH}
+     test -e ccache.tgz ||    (  (echo FROM ${IMAGETAG}_${TARGETARCH};echo RUN echo yocacheme) | time docker buildx build  --output=type=local,dest=/tmp/buildout_${IMAGETAG}_${TARGETARCH}_builder  --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${BUILDARCH}   --cache-from ${IMAGETAG}_${TARGETARCH}_buildcache -t  ${IMAGETAG}_${TARGETARCH}_builder $buildstring -f - ) ;
+     test -e /tmp/buildout_${IMAGETAG}_${TARGETARCH}_builder && test -e /tmp/buildout_${IMAGETAG}_${TARGETARCH}/ccache.tgz && mv /tmp/buildout_${IMAGETAG}_${TARGETARCH}/ccache.tgz .
+     test -e /tmp/buildout_${IMAGETAG}_${TARGETARCH}_builder && rm -rf "/tmp/buildout_${IMAGETAG}_${TARGETARCH}"    
     test -e ccache.tgz || ( mkdir .tmpempty ;echo 123 .tmpempty/file;tar cvzf ccache.tgz .tmpempty )
     test -e dropbear-src || cp -rau ${startdir}/dropbear-src .
     test -e .tmpempty && rm -rf .tmpempty
@@ -52,20 +52,21 @@ mkdir build
 buildstring=build
 DFILENAME=$startdir/Dockerfile.${IMAGETAG_SHORT}
 echo "singlearch-build for "$BUILDARCH
-echo time docker buildx build  --output=type=registry,push=true --push   --pull --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${BUILDARCH} --cache-to ${IMAGETAG}_${TARGETARCH}_buildcache  --cache-from ${IMAGETAG}_${TARGETARCH}_buildcache -t  ${IMAGETAG}_${TARGETARCH} $buildstring -f "${DFILENAME}" 
+echo time docker buildx build  --output=type=registry,push=true --push   --pull --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${BUILDARCH} --cache-to ${IMAGETAG}_${TARGETARCH}_buildcache  --cache-from ${IMAGETAG}_${TARGETARCH}_buildcache -t  ${IMAGETAG}_${TARGETARCH}_builder $buildstring -f "${DFILENAME}" 
      (
      test -e binaries.tgz && rm binaries.tgz
-     time docker buildx build  --output=type=registry,push=true --push  --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${BUILDARCH} --cache-to ${IMAGETAG}_${TARGETARCH}_buildcache  --cache-from ${IMAGETAG}_${TARGETARCH}_buildcache -t  ${IMAGETAG}_${TARGETARCH} $buildstring -f "${DFILENAME}" ;
+     time docker buildx build  --output=type=registry,push=true --push  --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${BUILDARCH} --cache-to ${IMAGETAG}_${TARGETARCH}_buildcache  --cache-from ${IMAGETAG}_${TARGETARCH}_buildcache -t  ${IMAGETAG}_${TARGETARCH}_builder $buildstring -f "${DFILENAME}" ;
      docker rmi ${IMAGETAG}_${TARGETARCH}
      ### our arch ..
-     docker export $(docker create --name cicache_${IMAGETAG//[:\/]/_}_${TARGETARCH} ${IMAGETAG}_${TARGETARCH} /bin/false ) |tar xv binaries.tgz ;docker rm cicache_${IMAGETAG//[:\/]/_}_${TARGETARCH};docker rmi ${IMAGETAG}_${TARGETARCH}
+     docker export $(docker create --name cicache_${IMAGETAG//[:\/]/_}_${TARGETARCH} ${IMAGETAG}_${TARGETARCH}_builder /bin/false ) |tar xv binaries.tgz ;docker rm cicache_${IMAGETAG//[:\/]/_}_${TARGETARCH};docker rmi ${IMAGETAG}_${TARGETARCH}
 ##### multi arch
-     test -e binaries.tgz ||    (  time docker buildx build  --output=type=local,dest=/tmp/buildout_${IMAGETAG}_${TARGETARCH}   --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${BUILDARCH}   --cache-from ${IMAGETAG}_${TARGETARCH}_buildcache -t  ${IMAGETAG}_${TARGETARCH} $buildstring -f "${DFILENAME}" ) ;
-     test -e /tmp/buildout_${IMAGETAG}_${TARGETARCH} && test -e /tmp/buildout_${IMAGETAG}_${TARGETARCH}/binaries.tgz && mv /tmp/buildout_${IMAGETAG}_${TARGETARCH}/binaries.tgz .
-     test -e /tmp/buildout_${IMAGETAG}_${TARGETARCH} && rm -rf "/tmp/buildout_${IMAGETAG}_${TARGETARCH}"
+     test -e binaries.tgz ||    (  time docker buildx build  --output=type=local,dest=/tmp/buildout_${IMAGETAG}_${TARGETARCH}_builder   --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${BUILDARCH}   --cache-from ${IMAGETAG}_${TARGETARCH}_buildcache -t  ${IMAGETAG}_${TARGETARCH}_builder $buildstring -f "${DFILENAME}" ) ;
+     test -e /tmp/buildout_${IMAGETAG}_${TARGETARCH}_builder && test -e /tmp/buildout_${IMAGETAG}_${TARGETARCH}/binaries.tgz && mv /tmp/buildout_${IMAGETAG}_${TARGETARCH}/binaries.tgz .
+     test -e /tmp/buildout_${IMAGETAG}_${TARGETARCH}_builder && rm -rf "/tmp/buildout_${IMAGETAG}_${TARGETARCH}"
      test -e binaries.tgz || echo "ERROR: NO BINARIES"
+     test -e binaries.tgz && cp binaries.tgz hardened-dropbear-$IMAGETAG_SHORT.$TARGETARCH.tar.gz &&  (  (grep ^FROM "${DFILENAME}" |tail -n1;echo "ADD hardened-dropbear-$IMAGETAG_SHORT.$TARGETARCH.tar.gz";echo RUN dropbear --help ) |time docker buildx build  --output=type=registry,push=true --push  --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${BUILDARCH}  -t  ${IMAGETAG}_${TARGETARCH} $buildstring -f - );
      test -e binaries.tgz && mv binaries.tgz ${startdir}/hardened-dropbear-$IMAGETAG_SHORT.$TARGETARCH.tar.gz
-
+     
     ) &
      
 
