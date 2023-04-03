@@ -210,12 +210,12 @@ jobs:
         run: bash -c 'find -name "*.tar.gz" | while read file;do mv $file .;done'
       - name : dummy release file
         run: echo "still testing" > RELEASE.md
-      - name: Generate release tag
+      - name: Generate release tag name
         id: tag_name
-        run: echo "::set-output name=release_name::Build_$(date +"%Y.%m.%d_%H-%M")"
+        run: echo "release_name=Build_$(date +"%Y.%m.%d_%H-%M")" >> $GITHUB_OUTPUT
       - name: Generate release tag
         id: tag
-        run: echo "::set-output name=release_tag::v$(date +"%Y.%m.%d_%H-%M")"
+        run: echo "release_tag=v$(date +"%Y.%m.%d_%H-%M")" >> $GITHUB_OUTPUT
       - name: Release
         uses: ncipollo/release-action@v1
         with:
