@@ -35,7 +35,7 @@ jobs:
           package-type: 'container'
           min-versions-to-keep: 0
           delete-only-untagged-versions: 'true'
-          ignore-versions: '.*(buildcache|baseimage)(|.*)'
+          ignore-versions: '.*(buildcache|baseimage|builder)(|.*)'
       - uses: actions/delete-package-versions@v4
         name: delete non-build containers
         with: 
@@ -43,5 +43,5 @@ jobs:
           package-type: 'container'
           min-versions-to-keep: 23
           delete-only-untagged-versions: 'false'
-          ignore-versions: '.*(buildcache|baseimage)(|.*)'
+          ignore-versions: '.*(buildcache|baseimage|builder)(|.*)'
 
