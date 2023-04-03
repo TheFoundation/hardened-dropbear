@@ -219,7 +219,9 @@ jobs:
       - name: Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "foo/*.txt"
+          tag:      ${{ steps.tag.outputs.tag }}
+          name: ${{ steps.tag_name.outputs.name }}
+          artifacts: "hardened-dropbear-*.tar.gz"
           bodyFile: "RELEASE.md"
 #      - name: Release
 #        uses: softprops/action-gh-release@v1
