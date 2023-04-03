@@ -44,6 +44,7 @@ mkdir build
     test -e .tmpempty && rm -rf .tmpempty
 )
 
+
 buildstring=build
 DFILENAME=$startdir/Dockerfile.${IMAGETAG_SHORT}
 echo "singlearch-build for "$BUILDARCH
