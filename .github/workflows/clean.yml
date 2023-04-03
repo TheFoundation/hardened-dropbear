@@ -19,29 +19,3 @@ jobs:
           repository: ${{ github.repository }}
           retain_days: 0
           keep_minimum_runs: 1
-
-  cleanup-registry:
-    runs-on: ubuntu-latest
-    #container: ghcr.io/thefoundation-builder/docker-with-buildx:latest
-    if: github.repository_owner == 'thefoundation-builder'
-    steps:
-      - name: Sleep for 3 minutes
-        run: sleep 180s
-        shell: bash
-      - uses: actions/delete-package-versions@v4
-        name: delete untagged containers
-        with: 
-          package-name: "${{ github.event.repository.name }}"
-          package-type: 'container'
-          min-versions-to-keep: 0
-          delete-only-untagged-versions: 'true'
-          ignore-versions: '.*(buildcache|baseimage|builder)(|.*)'
-      - uses: actions/delete-package-versions@v4
-        name: delete non-build containers
-        with: 
-          package-name: "${{ github.event.repository.name }}"
-          package-type: 'container'
-          min-versions-to-keep: 23
-          delete-only-untagged-versions: 'false'
-          ignore-versions: '.*(buildcache|baseimage|builder)(|.*)'
-
