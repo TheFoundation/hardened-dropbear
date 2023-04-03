@@ -128,8 +128,8 @@ jobs:
     strategy:
       matrix:
         os: [alpine, ubuntu-focal, ubuntu-bionic, ubuntu-jammy]
-        arch: [linux_SLASH_amd64]
-        #arch: [linux_SLASH_amd64,linux_SLASH_arm64,linux_SLASH_arm_SLASH_v7,linux_SLASH_s390x,linux_SLASH_ppc64le]
+        #arch: [linux_SLASH_amd64]
+        arch: [linux_SLASH_amd64,linux_SLASH_arm64,linux_SLASH_arm_SLASH_v7,linux_SLASH_s390x,linux_SLASH_ppc64le]
         include:
           - os: ubuntu-bionic
             arch: linux_SLASH_386
@@ -208,19 +208,19 @@ jobs:
         run: find -type f -name "*.gz"
       - name: gather files
         run: bash -c 'find -name "*.tar.gz" | while read file;do mv $file .;done'
-      - name : dummy release file
-        run: echo "still testing" > RELEASE.md
       - name: Generate release tag name
         id: tag_name
-        run: echo "release_name=Build_$(date +"%Y.%m.%d_%H-%M")" >> $GITHUB_OUTPUT
+        run: echo "release_name=$(date +"%Y.%m.%d_%H-%M")" >> $GITHUB_OUTPUT
       - name: Generate release tag
         id: tag
         run: echo "release_tag=v$(date +"%Y.%m.%d_%H-%M")" >> $GITHUB_OUTPUT
+      - name : dummy release file
+        run: (echo "#Hardened Dropbear a.k.a. Bouncing Dropbear";echo;echo "### Version ${{ steps.tag.outputs.release_tag }} "; echo "* The tar.gz files contain only the binaries an are generated from / ";echo "* Refer to github.com/${{ github.repository_owner }}/${{ github.event.repository.name }} for the source code ";echo "The Docker build images are at ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}" )  > RELEASE.md
       - name: Release
         uses: ncipollo/release-action@v1
         with:
           tag:      ${{ steps.tag.outputs.release_tag }}
-          name: ${{ steps.tag_name.outputs.release_name }}
+          name: Hardened Dropbear ${{ steps.tag_name.outputs.release_name }}
           artifacts: "hardened-dropbear-*.tar.gz"
           bodyFile: "RELEASE.md"
 #      - name: Release
