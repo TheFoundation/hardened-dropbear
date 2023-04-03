@@ -40,10 +40,11 @@ jobs:
           package-type: 'container'
           min-versions-to-keep: 0
           delete-only-untagged-versions: 'false'
-          ignore-versions: '.*(buildcache|baseimage)'
+          ignore-versions: '.*(buildcache|baseimage)(|.*)'
       - uses: actions/delete-package-versions@v4
         with: 
           package-name: "${{ github.event.repository.name }}"
           package-type: 'container'
           min-versions-to-keep: 1
           delete-only-untagged-versions: 'false'
+          ignore-versions: '.*(buildcache|baseimage)(|.*)'
