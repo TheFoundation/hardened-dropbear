@@ -128,14 +128,17 @@ jobs:
     strategy:
       matrix:
         os: [alpine, ubuntu-focal, ubuntu-bionic, ubuntu-jammy]
-        arch: [linux_SLASH_amd64,linux_SLASH_arm64,linux_SLASH_arm_SLASH_v7]
+        arch: [linux_SLASH_amd64,linux_SLASH_arm64,linux_SLASH_arm_SLASH_v7,linux_SLASH_s390x,linux_SLASH_ppc64le]
         include:
+          - os: ubuntu-jammy
+            arch: linux_SLASH_386
           - os: ubuntu-bionic
             arch: linux_SLASH_386
           - os: alpine
             arch: linux_SLASH_386
           - os: alpine
             arch: linux_SLASH_arm_SLASH_v6
+
 #    runs-on: ${{ matrix.os }}
     runs-on: ubuntu-latest
     container: ghcr.io/thefoundation-builder/docker-with-buildx:latest
@@ -189,7 +192,8 @@ jobs:
         with:
           name: artifact-${{ matrix.os }}-${{ matrix.arch }}
           path: upload/*gz
-          if-no-files-found: ignore # error 'warn' or 'ignore' are also available, defaults to `warn`
+          if-no-files-found: ignore 
+          # 'error' 'warn' or 'ignore' are also available, defaults to `warn`
           retention-days: 2
 
   finish-release:
@@ -207,6 +211,9 @@ jobs:
         run: bash -c 'find -name "*.tar.gz" | while read file;do mv $file .;done'
       - name : dummy release file
         run: echo "still testing" > RELEASE.md
+      - name: Generate release tag
+        id: tag
+        run: echo "::set-output name=release_tag::Build_$(date +"%Y.%m.%d_%H-%M")"
       - name: Release
         uses: softprops/action-gh-release@v1
         #if: startsWith(github.ref, 'refs/tags/')
