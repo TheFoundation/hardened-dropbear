@@ -115,10 +115,13 @@ jobs:
         run: |
              date +%s > /tmp/.buildstart
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
-             mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
+             export INFLUX_MEASUREMENT=buildresult
+             mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');
+             export INFLUX_MEASUREMENT=buildtime            
+             echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
+             export INFLUX_MEASUREMENT=log
              cat /tmp/logpipe | while read line;do echo "$line" >&2 ;echo "$line"  ;done | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g' | tr -d '\000-\010\013\014\016-\037'|sed -u  's/\r/\n/g;s/\t/    /g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE $(echo ${{ github.job }}|sed 's/build-//g') "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') info &
-             time bash  _0.build.test.sh   2>&1;echo $? > /tmp/dropbear.build.result
-
+             time bash  _0.build.test.sh &> /tmp/logpipe ;echo $? > /tmp/dropbear.build.result
              bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/dropbear.build.result | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              echo "RESULT:"$(cat /tmp/dropbear.build.result)
@@ -199,9 +202,14 @@ jobs:
         run: |
              date +%s > /tmp/.buildstart
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
-             mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')-${{ matrix.os }}-${{ matrix.arch }};echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')-${{ matrix.os }}-${{ matrix.arch }}
+             mkfifo /tmp/logpipe ; 
+             export INFLUX_MEASUREMENT=buildresult
+             echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')-${{ matrix.os }}-${{ matrix.arch }};
+             export INFLUX_MEASUREMENT=buildtime
+             echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')-${{ matrix.os }}-${{ matrix.arch }}
+             export INFLUX_MEASUREMENT=log
              cat /tmp/logpipe | while read line;do echo "$line" >&2 ;echo "$line"  ;done | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g' | tr -d '\000-\010\013\014\016-\037'|sed -u  's/\r/\n/g;s/\t/    /g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE $(echo ${{ github.job }}|sed 's/build-//g')-${{ matrix.os }}-${{ matrix.arch }} "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')-${{ matrix.os }}-${{ matrix.arch }} info &
-             time bash  _1.build.all.sh ${{ matrix.os }} ${{ matrix.arch }}  2>&1;echo $? > /tmp/dropbear.build.result
+             time bash  _1.build.all.sh ${{ matrix.os }} ${{ matrix.arch }}  &> /tmp/logpipe ;echo $? > /tmp/dropbear.build.result
              bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')-${{ matrix.os }}-${{ matrix.arch }}
              cat /tmp/dropbear.build.result | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')-${{ matrix.os }}-${{ matrix.arch }}
              echo "RESULT:"$(cat /tmp/dropbear.build.result)
