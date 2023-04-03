@@ -25,9 +25,6 @@ jobs:
     #container: ghcr.io/thefoundation-builder/docker-with-buildx:latest
     if: github.repository_owner == 'thefoundation-builder'
     steps:
-#      - name: Show sources and Targets
-#        run: |
-#              echo "BUILDCACHE: $BUILDCACHE"
       - uses: actions/delete-package-versions@v4
         with: 
           package-name: "${{ github.event.repository.name }}"
