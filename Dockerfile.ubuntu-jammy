@@ -1,5 +1,5 @@
 FROM ubuntu:jammy
-RUN df -m / && /bin/ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime || true && export DEBIAN_FRONTEND=noninteractive && apt-get update && apt-get install -y bash build-essential git zlib1g-dev gcc ccache make autoconf libc-dev pkg-config 
+RUN  /bin/ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime || true && export DEBIAN_FRONTEND=noninteractive && apt-get update && apt-get install -y bash build-essential git zlib1g-dev gcc ccache make autoconf libc-dev pkg-config 
 COPY dropbear-src /usr/src/dropbear
 COPY build-bear.sh /etc/build-bear.sh
 COPY ccache.tgz /ccache.tgz

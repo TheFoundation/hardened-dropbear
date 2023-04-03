@@ -108,5 +108,8 @@ wait
 #    ) &
 #done
 #wait
+
+df -m
+docker image ls|grep $IMAGETAG_SHORT
 cd "${startdir}"
 find |grep tar.gz |grep hardened-dropbear || exit 1
