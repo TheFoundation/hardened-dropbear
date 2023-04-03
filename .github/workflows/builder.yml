@@ -64,7 +64,7 @@ jobs:
         with:
           source-directory: 'downstream'
           destination-github-username: 'thefoundation-builder'
-          destination-repository-name: 'hardened-dropbear'
+          destination-repository-name: 'hardened-dropbear-builder'
           user-email: actions@github.com
 #          user-email: github@committing.8shield.net
           target-branch: main
