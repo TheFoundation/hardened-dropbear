@@ -1,5 +1,3 @@
-# Builder FOR  https://github.com/TheFoundation/hardened-dropbear 
-
 # hardened-dropbear
 Hardened Dropbear with weaknesses disabled .. (hopefully )weekly built 
 
