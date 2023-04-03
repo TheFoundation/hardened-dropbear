@@ -69,34 +69,6 @@ jobs:
 #          user-email: github@committing.8shield.net
           target-branch: main
 
-  cleanup-registry:
-    runs-on: ubuntu-latest
-    #container: ghcr.io/thefoundation-builder/docker-with-buildx:latest
-    if: github.repository_owner == 'thefoundation-builder'
-    steps:
-#      - name: Show sources and Targets
-#        run: |
-#              echo "BUILDCACHE: $BUILDCACHE"
-      - uses: actions/delete-package-versions@v4
-        with: 
-          package-name: "${{ github.event.repository.name }}"
-          package-type: 'container'
-          min-versions-to-keep: 1
-          delete-only-untagged-versions: 'true'
-      - uses: actions/delete-package-versions@v4
-        with: 
-          package-name: "${{ github.event.repository.name }}"
-          package-type: 'container'
-          min-versions-to-keep: 0
-          delete-only-untagged-versions: 'false'
-          ignore-versions: '.*(buildcache|baseimage)'
-      - uses: actions/delete-package-versions@v4
-        with: 
-          package-name: "${{ github.event.repository.name }}"
-          package-type: 'container'
-          min-versions-to-keep: 1
-          delete-only-untagged-versions: 'false'
-
   build-base:
     runs-on: ubuntu-latest
     container: ghcr.io/thefoundation-builder/docker-with-buildx:latest
@@ -178,6 +150,7 @@ jobs:
   build_matrix:
     needs: build-base
     strategy:
+      max-parallel: 14
       matrix:
         os: [alpine, ubuntu-focal, ubuntu-bionic, ubuntu-jammy]
         arch: [linux_SLASH_amd64,linux_SLASH_arm64,linux_SLASH_arm_SLASH_v7,linux_SLASH_s390x,linux_SLASH_ppc64le]

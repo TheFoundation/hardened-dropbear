@@ -1,4 +1,4 @@
-name: Delete old workflow runs
+name: Delete old workflow runs and clean package registry
 on:
   push:
     branches:
@@ -19,3 +19,31 @@ jobs:
           repository: ${{ github.repository }}
           retain_days: 0
           keep_minimum_runs: 4
+
+  cleanup-registry:
+    runs-on: ubuntu-latest
+    #container: ghcr.io/thefoundation-builder/docker-with-buildx:latest
+    if: github.repository_owner == 'thefoundation-builder'
+    steps:
+#      - name: Show sources and Targets
+#        run: |
+#              echo "BUILDCACHE: $BUILDCACHE"
+      - uses: actions/delete-package-versions@v4
+        with: 
+          package-name: "${{ github.event.repository.name }}"
+          package-type: 'container'
+          min-versions-to-keep: 1
+          delete-only-untagged-versions: 'true'
+      - uses: actions/delete-package-versions@v4
+        with: 
+          package-name: "${{ github.event.repository.name }}"
+          package-type: 'container'
+          min-versions-to-keep: 0
+          delete-only-untagged-versions: 'false'
+          ignore-versions: '.*(buildcache|baseimage)'
+      - uses: actions/delete-package-versions@v4
+        with: 
+          package-name: "${{ github.event.repository.name }}"
+          package-type: 'container'
+          min-versions-to-keep: 1
+          delete-only-untagged-versions: 'false'
