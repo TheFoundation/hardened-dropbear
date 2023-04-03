@@ -82,8 +82,11 @@ echo time docker buildx build  --output=type=registry,push=true --push   --pull 
 done
 done
 wait 
+echo
 df -m
-docker image ls|grep $IMAGETAG_SHORT
+echo
+docker image ls|grep hardened-dropbear
+echo
 cd "${startdir}"
 #find |grep tar.gz |grep hardened-dropbear || exit 1
 find |grep tar.gz |grep hardened-dropbear ||exit 0

@@ -74,43 +74,10 @@ echo time docker buildx build  --output=type=registry,push=true --push   --pull 
 done
 done
 wait 
-
-#TARGETARCH=$BUILD_TARGET_PLATFORMS
-
-#time docker buildx build  --output=type=registry,push=true  --push  --pull --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${TARGETARCH} --cache-from ${IMAGETAG} -t  ${IMAGETAG} $buildstring -f "${DFILENAME}" 
-
-#for BUILDARCH in $(echo $BUILD_TARGET_PLATFORMS |sed 's/,/ /g');do
-#TARGETARCH=$(_platform_tag $BUILDARCH  )
-#TARGETDIR=builds/$TARGETARCH
-#echo "building to "$TARGETDIR
-#mkdir -p "$TARGETDIR"
-#cd "$TARGETDIR"
-#mkdir build
-#(
-#    cd build
-#    cp ${startdir}/build-bear.sh . -v
-#    test -e ccache.tgz && rm ccache.tgz
-#    docker export $(docker create --name cicache_${IMAGETAG//[:\/]/_}_${TARGETARCH} $IMAGETAG /bin/false ) |tar xv ccache.tgz ;docker rm cicache_${IMAGETAG//[:\/]/_}_${TARGETARCH}
-#    test -e ccache.tgz || ( mkdir .tmpempty ;echo 123 .tmpempty/file;tar cvzf ccache.tgz .tmpempty )
-#    test -e dropbear-src || cp -rau ${startdir}/dropbear-src .
-#    test -e .tmpempty && rm -rf .tmpempty
-#)
-#
-#buildstring=build
-#DFILENAME=$startdir/Dockerfile.alpine
-#echo "build for "$BUILDARCH
-#echo time docker buildx build  --output=type=registry,push=true --push   --pull --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${BUILDARCH} --cache-to ${IMAGETAG}_${TARGETARCH}_buildcache  --cache-from ${IMAGETAG}_${TARGETARCH}_buildcache -t  ${IMAGETAG}_${TARGETARCH}_builder $buildstring -f "${DFILENAME}" 
-#     (
-#    test -e binaries.tgz && rm binaries.tgz
-#     docker rmi ${IMAGETAG}_${TARGETARCH}
-#     time docker buildx build  --output=type=registry,push=true --push  --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${BUILDARCH} --cache-to ${IMAGETAG}_${TARGETARCH}_buildcache  --cache-from ${IMAGETAG}_${TARGETARCH}_buildcache -t  ${IMAGETAG}_${TARGETARCH}_builder $buildstring -f "${DFILENAME}" ;
-#     docker export $(docker create --name cicache_${IMAGETAG//[:\/]/_}_${TARGETARCH} $IMAGETAG /bin/false ) |tar xv binaries.tgz ;docker rm cicache_${IMAGETAG//[:\/]/_}_${TARGETARCH}
-#     test -e binaries.tgz && mv binaries.tgz ${startdir}/hardened-dropbear.$TARGETARCH.tar.gz
-#    ) &
-#done
-#wait
-
+echo
 df -m
-docker image ls|grep $IMAGETAG_SHORT
+echo
+docker image ls|grep hardened-dropbear
+echo
 cd "${startdir}"
 find |grep tar.gz |grep hardened-dropbear || exit 1
