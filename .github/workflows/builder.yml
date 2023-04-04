@@ -254,7 +254,7 @@ jobs:
       - name: Release
         run: gh release create "${{ steps.tag.outputs.release_tag }}" --repo thefoundation/hardened-dropbear --latest --notes-file RELEASE.md --title "Hardened Dropbear ${{ steps.tag_name.outputs.release_name }}" 
         env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
 #        uses: ncipollo/release-action@v1
 #        with:
 #          tag: ${{ steps.tag.outputs.release_tag }}
