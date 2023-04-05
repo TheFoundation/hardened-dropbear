@@ -252,7 +252,7 @@ jobs:
       - name : create release file
         run: (echo "## Hardened Dropbear a.k.a. Bouncing Dropbear";echo;echo "### Version ${{ steps.tag.outputs.release_tag }} "; echo "* The tar.gz files contain only the binaries an are generated from / ";echo "* Refer to github.com/${{ github.repository_owner }}/${{ github.event.repository.name }} for the source code ";echo "* The Docker images are at ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}  with only the binaries extracted , (g)libs might be missing .. " )  > RELEASE.md
       - name: Release
-        run: gh release create "${{ steps.tag.outputs.release_tag }}" --repo thefoundation/hardened-dropbear --latest --notes-file RELEASE.md --title "Hardened Dropbear ${{ steps.tag_name.outputs.release_name }}" 
+        run: gh release create "${{ steps.tag.outputs.release_tag }}" --repo thefoundation/hardened-dropbear --latest --notes-file RELEASE.md --title "Hardened Dropbear ${{ steps.tag_name.outputs.release_name }}"  hardened-dropbear-*.tar.gz
         env:
             GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
 #        uses: ncipollo/release-action@v1
