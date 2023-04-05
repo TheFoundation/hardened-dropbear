@@ -255,7 +255,7 @@ jobs:
         run: gh release create "${{ steps.tag.outputs.release_tag }}" --repo thefoundation/hardened-dropbear --latest --notes-file RELEASE.md --title "Hardened Dropbear ${{ steps.tag_name.outputs.release_name }}"  hardened-dropbear-*.tar.gz
         env:
             GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-#        uses: ncipollo/release-action@v1
+#     -  uses: ncipollo/release-action@v1
 #        with:
 #          tag: ${{ steps.tag.outputs.release_tag }}
 #          name: Hardened Dropbear ${{ steps.tag_name.outputs.release_name }}
@@ -328,6 +328,7 @@ jobs:
           min-versions-to-keep: 0
           delete-only-untagged-versions: 'true'
           ignore-versions: '.*(buildcache|baseimage|builder)(|.*)'
+          token: ${{secrets.PACKAGE_TOKEN}}
       - uses: actions/delete-package-versions@v4
         name: delete non-build containers
         with: 
@@ -336,4 +337,4 @@ jobs:
           min-versions-to-keep: 4
           delete-only-untagged-versions: 'false'
           ignore-versions: '.*(buildcache|baseimage|builder)(|.*)'
-
+          token: ${{secrets.PACKAGE_TOKEN}}
