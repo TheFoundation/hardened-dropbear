@@ -7,7 +7,12 @@ Hardened Dropbear with weaknesses disabled .. (hopefully )weekly built
 ```
 export OSVER=$((head -n1 /etc/lsb-release;echo "-" ;head -n3 /etc/lsb-release |tail -n1)|cut -d "=" -f2|tr  '[:upper:]' '[:lower:]'|tr -d '\n')
 export DROPBEAR_VERSION=$(curl -s "https://github.com/TheFoundation/hardened-dropbear/releases"|grep expanded_assets|grep 'src="https://github.com/'|sed 's/.\+expanded_assets\/v//g;s/".\+//g'|head -n1);
-export DOWNLOAD_URL="https://github.com/TheFoundation/hardened-dropbear/releases/download/v$DROPBEAR_VERSION/hardened-dropbear-$OSVER."$(_buildx_arch |sed 's~/~_~g')
+export HDB_DOWNLOAD_URL="https://github.com/TheFoundation/hardened-dropbear/releases/download/v$DROPBEAR_VERSION/hardened-dropbear-$OSVER."$(_buildx_arch |sed 's~/~_~g')
+( 
+    cd /
+    echo "trying binary install"
+    curl "${HDB_DOWNLOAD_URL}"|tar xvz
+)
 ```
 
 
@@ -15,7 +20,12 @@ export DOWNLOAD_URL="https://github.com/TheFoundation/hardened-dropbear/releases
 ```
 export OSVER=alpine
 export DROPBEAR_VERSION=$(curl -s "https://github.com/TheFoundation/hardened-dropbear/releases"|grep expanded_assets|grep 'src="https://github.com/'|sed 's/.\+expanded_assets\/v//g;s/".\+//g'|head -n1);
-export DOWNLOAD_URL="https://github.com/TheFoundation/hardened-dropbear/releases/download/v$DROPBEAR_VERSION/hardened-dropbear-$OSVER."$(_buildx_arch |sed 's~/~_~g')
+export HDB_DOWNLOAD_URL="https://github.com/TheFoundation/hardened-dropbear/releases/download/v$DROPBEAR_VERSION/hardened-dropbear-$OSVER."$(_buildx_arch |sed 's~/~_~g')
+( 
+    cd /
+    echo "trying binary install"
+    curl "${HDB_DOWNLOAD_URL}"|tar xvz
+)
 ```
 
 
