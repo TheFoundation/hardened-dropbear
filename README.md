@@ -12,7 +12,7 @@ export HDB_DOWNLOAD_URL="https://github.com/TheFoundation/hardened-dropbear/rele
 ( 
     cd /
     echo "trying binary install"
-    curl "${HDB_DOWNLOAD_URL}"|tar xvz
+    curl -L "${HDB_DOWNLOAD_URL}" | tar xvz
 )
 ```
 
@@ -26,7 +26,7 @@ export HDB_DOWNLOAD_URL="https://github.com/TheFoundation/hardened-dropbear/rele
 ( 
     cd /
     echo "trying binary install"
-    curl "${HDB_DOWNLOAD_URL}"|tar xvz
+    curl -L "${HDB_DOWNLOAD_URL}" | tar xvz
 )
 ```
 
