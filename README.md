@@ -11,8 +11,8 @@ export DROPBEAR_VERSION=$(curl -s "https://github.com/TheFoundation/hardened-dro
 export HDB_DOWNLOAD_URL="https://github.com/TheFoundation/hardened-dropbear/releases/download/v$DROPBEAR_VERSION/hardened-dropbear-$OSVER."$(_buildx_arch |sed 's~/~_~g')".tar.gz"
 ( 
     cd /
-    echo "trying binary install"
-    curl -L "${HDB_DOWNLOAD_URL}" | tar xvz
+    echo "trying binary install from ${HDB_DOWNLOAD_URL}"
+    curl -sL "${HDB_DOWNLOAD_URL}" | tar xvz
 )
 ```
 
@@ -25,8 +25,8 @@ export DROPBEAR_VERSION=$(curl -s "https://github.com/TheFoundation/hardened-dro
 export HDB_DOWNLOAD_URL="https://github.com/TheFoundation/hardened-dropbear/releases/download/v$DROPBEAR_VERSION/hardened-dropbear-$OSVER."$(_buildx_arch |sed 's~/~_~g')".tar.gz"
 ( 
     cd /
-    echo "trying binary install"
-    curl -L "${HDB_DOWNLOAD_URL}" | tar xvz
+    echo "trying binary install from ${HDB_DOWNLOAD_URL}"
+    curl -sL "${HDB_DOWNLOAD_URL}" | tar xvz
 )
 ```
 
