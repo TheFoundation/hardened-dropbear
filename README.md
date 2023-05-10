@@ -8,7 +8,7 @@ Hardened Dropbear with weaknesses disabled .. (hopefully )weekly built
 _buildx_arch()           { case "$(uname -m)" in aarch64) echo linux/arm64;; x86_64) echo linux/amd64 ;; armv7l|armv7*) echo linux/arm/v7;; armv6l|armv6*) echo linux/arm/v6;;  esac ; } ;
 export OSVER=$((head -n1 /etc/lsb-release;echo "-" ;head -n3 /etc/lsb-release |tail -n1)|cut -d "=" -f2|tr  '[:upper:]' '[:lower:]'|tr -d '\n')
 export DROPBEAR_VERSION=$(curl -s "https://github.com/TheFoundation/hardened-dropbear/releases"|grep expanded_assets|grep 'src="https://github.com/'|sed 's/.\+expanded_assets\/v//g;s/".\+//g'|head -n1);
-export HDB_DOWNLOAD_URL="https://github.com/TheFoundation/hardened-dropbear/releases/download/v$DROPBEAR_VERSION/hardened-dropbear-$OSVER."$(_buildx_arch |sed 's~/~_~g')
+export HDB_DOWNLOAD_URL="https://github.com/TheFoundation/hardened-dropbear/releases/download/v$DROPBEAR_VERSION/hardened-dropbear-$OSVER."$(_buildx_arch |sed 's~/~_~g')".tar.gz"
 ( 
     cd /
     echo "trying binary install"
@@ -22,7 +22,7 @@ export HDB_DOWNLOAD_URL="https://github.com/TheFoundation/hardened-dropbear/rele
 _buildx_arch()           { case "$(uname -m)" in aarch64) echo linux/arm64;; x86_64) echo linux/amd64 ;; armv7l|armv7*) echo linux/arm/v7;; armv6l|armv6*) echo linux/arm/v6;;  esac ; } ;
 export OSVER=alpine
 export DROPBEAR_VERSION=$(curl -s "https://github.com/TheFoundation/hardened-dropbear/releases"|grep expanded_assets|grep 'src="https://github.com/'|sed 's/.\+expanded_assets\/v//g;s/".\+//g'|head -n1);
-export HDB_DOWNLOAD_URL="https://github.com/TheFoundation/hardened-dropbear/releases/download/v$DROPBEAR_VERSION/hardened-dropbear-$OSVER."$(_buildx_arch |sed 's~/~_~g')
+export HDB_DOWNLOAD_URL="https://github.com/TheFoundation/hardened-dropbear/releases/download/v$DROPBEAR_VERSION/hardened-dropbear-$OSVER."$(_buildx_arch |sed 's~/~_~g')".tar.gz"
 ( 
     cd /
     echo "trying binary install"
