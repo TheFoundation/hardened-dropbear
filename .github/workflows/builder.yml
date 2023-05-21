@@ -332,7 +332,7 @@ jobs:
       - name: Delete untagged images
         uses: actions/github-script@v6.3.3
         with:
-          github-token: ${{ secrets.PACKAGE_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const response = await github.request("GET /users/${{ vars.USER }}/packages/container/${{ env.PACKAGE_NAME }}/versions",
               { per_page: ${{ env.PER_PAGE }}
