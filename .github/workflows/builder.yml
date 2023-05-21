@@ -328,11 +328,11 @@ jobs:
 #          min-versions-to-keep: 0
 #          delete-only-untagged-versions: 'true'
 #          ignore-versions: '.*(buildcache|baseimage|builder)(|.*)'
-#          token: ${{secrets.PACKAGE_TOKEN}}
+#          token: ${{ secrets.PACKAGE_TOKEN }}
       - name: Delete untagged images
         uses: actions/github-script@v6.3.3
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.PACKAGE_TOKEN }}
           script: |
             const response = await github.request("GET /users/${{ vars.USER }}/packages/container/${{ env.PACKAGE_NAME }}/versions",
               { per_page: ${{ env.PER_PAGE }}
@@ -359,4 +359,4 @@ jobs:
           min-versions-to-keep: 4
           delete-only-untagged-versions: 'false'
           ignore-versions: '.*(buildcache|baseimage|builder)(|.*)'
-          token: ${{secrets.PACKAGE_TOKEN}}
+          token: ${{ secrets.PACKAGE_TOKEN }}
