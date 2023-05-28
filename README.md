@@ -16,7 +16,6 @@ export HDB_DOWNLOAD_URL="https://github.com/TheFoundation/hardened-dropbear/rele
 )
 ```
 
-
 ### Alpine
 ```
 _buildx_arch()           { case "$(uname -m)" in aarch64) echo linux/arm64;; x86_64) echo linux/amd64 ;; armv7l|armv7*) echo linux/arm/v7;; armv6l|armv6*) echo linux/arm/v6;;  esac ; } ;

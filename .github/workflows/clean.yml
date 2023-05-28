@@ -40,4 +40,3 @@ jobs:
           delete-only-untagged-versions: 'false'
           ignore-versions: '.*(buildcache|baseimage|builder)(|.*)'
           token: ${{ secrets.PACKAGE_TOKEN }}
-  
