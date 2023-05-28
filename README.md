@@ -29,7 +29,6 @@ export HDB_DOWNLOAD_URL="https://github.com/TheFoundation/hardened-dropbear/rele
 )
 ```
 
-
 ## Configs: 
 
 ```
