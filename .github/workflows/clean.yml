@@ -23,7 +23,7 @@ jobs:
           retain_days: 0
           keep_minimum_runs: 1
   cleanup-registry:
-    needs: finish-release
+#    needs: finish-release
     runs-on: ubuntu-latest
     #container: ghcr.io/thefoundation-builder/docker-with-buildx:latest
     if: github.repository_owner == 'thefoundation-builder'
