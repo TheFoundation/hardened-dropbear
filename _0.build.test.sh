@@ -1,6 +1,6 @@
 #!/bin/bash
 [[ -z "$PLATFORMS_ALPINE" ]] || BUILD_TARGET_PLATFORMS=$PLATFORMS_ALPINE
-[[ -z "$BUILD_TARGET_PLATFORMS" ]] && BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7"
+[[ -z "$BUILD_TARGET_PLATFORMS" ]] && BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64"
 
 __platform_tag() { echo "$1"|sed 's~/~_~g' ;};
 _oneline()               { tr -d '\n' ; } ;

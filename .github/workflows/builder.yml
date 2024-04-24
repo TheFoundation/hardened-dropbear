@@ -44,8 +44,7 @@ jobs:
   # See also https://docs.docker.com/docker-hub/builds/
   upstream:
     runs-on: ubuntu-latest
-    #container: quay.io/thefoundation/library:docker-with-buildx
-    container: ghcr.io/thefoundation/github-action-push-to-another-repository
+    container: quay.io/thefoundation/library:docker-with-buildx
     environment: build
     permissions:
       packages: read
