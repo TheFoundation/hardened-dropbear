@@ -36,7 +36,9 @@ env:
   PLATFORMS_ALPINE: "linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8"
   #PLATFORMS: "linux/amd64,linux/arm64/v8"
   #PLATFORMS: "linux/amd64,linux/arm64/v8"
-
+## builders:
+#  ghcr.io/thefoundation-builder/docker-with-buildx:latest
+#  quay.io/thefoundation/library:docker-with-buildx
 jobs:
   # Push image to GitHub Packages.
   # See also https://docs.docker.com/docker-hub/builds/
@@ -73,7 +75,7 @@ jobs:
 
   build-base:
     runs-on: ubuntu-latest
-    container: ghcr.io/thefoundation-builder/docker-with-buildx:latest
+    container: quay.io/thefoundation/library:docker-with-buildx
     env:
       QUAY_PASS: ${{ secrets.QUAY_PASS }}
       QUAY_USER: ${{ secrets.QUAY_USER }}
@@ -160,7 +162,7 @@ jobs:
             arch: linux_SLASH_386
 #    runs-on: ${{ matrix.os }}
     runs-on: ubuntu-latest
-    container: ghcr.io/thefoundation-builder/docker-with-buildx:latest
+    container: quay.io/thefoundation/library:docker-with-buildx
     env:
       QUAY_PASS: ${{ secrets.QUAY_PASS }}
       QUAY_USER: ${{ secrets.QUAY_USER }}
@@ -234,7 +236,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    container: ghcr.io/thefoundation-builder/docker-with-buildx:latest
+    container: quay.io/thefoundation/library:docker-with-buildx
     if: github.repository_owner == 'thefoundation-builder'
     steps:
       - name: Download all workflow run artifacts
@@ -314,7 +316,7 @@ jobs:
 ##  cleanup-registry:
 ##    needs: finish-release
 ##    runs-on: ubuntu-latest
-##    #container: ghcr.io/thefoundation-builder/docker-with-buildx:latest
+##    #container: quay.io/thefoundation/library:docker-with-buildx
 ##    if: github.repository_owner == 'thefoundation-builder'
 ##    steps:
 ##      - name: Sleep for 3 minutes
