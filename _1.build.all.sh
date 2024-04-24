@@ -61,11 +61,12 @@ echo timeout 5000 time docker buildx build  --output=type=registry,push=true --p
      #grep -v -e COPY -e build-bear "${DFILENAME}"  > "${DFILENAME}_baseimage"      
      #cp "${DFILENAME}_baseimage" "builder_baseimage/${DFILENAME}_baseimage"
      grep -v -e COPY -e build-bear "${DFILENAME}"  > "builder_baseimage/Dockerfile.${IMAGETAG_SHORT}_baseimage"
+     echo "BUILD_BASEIMAGE for Dockerfile.${IMAGETAG_SHORT} $BUILDARCH"
      (   cd builder_baseimage/;   timeout 5000 time docker buildx build  --output=type=registry,push=true --push  --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${BUILDARCH} --cache-to ${IMAGETAG}_${TARGETARCH}_buildcache_baseimage --cache-from ${IMAGETAG}_${TARGETARCH}_buildcache_baseimage  --cache-from ${IMAGETAG}_${TARGETARCH}_baseimage --cache-from ${IMAGETAG}_${TARGETARCH}_builder --cache-from ${IMAGETAG}_${TARGETARCH}_buildcache -t  ${IMAGETAG}_${TARGETARCH}_baseimage $buildstring -f "Dockerfile.${IMAGETAG_SHORT}_baseimage" )
      rm -rf builder_baseimage 
      # second image name _builder is the full thingy ( will be large . .)
      ( echo "FROM ${IMAGETAG}_${TARGETARCH}_baseimage";grep -v -e ^FROM -e "apk add" -e "apt " -e "apt-get" "${DFILENAME}")  > "Dockerfile.${IMAGETAG_SHORT}_real" 
-     
+     echo "BUILD_REAL_IMAGE for Dockerfile.${IMAGETAG_SHORT} $BUILDARCH"
      timeout 5000 time docker buildx build  --output=type=registry,push=true --push  --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${BUILDARCH} --cache-from ${IMAGETAG}_${TARGETARCH}_builder --cache-to ${IMAGETAG}_${TARGETARCH}_buildcache  --cache-from ${IMAGETAG}_${TARGETARCH}_buildcache_baseimage  --cache-from ${IMAGETAG}_${TARGETARCH}_baseimage --cache-from ${IMAGETAG}_${TARGETARCH}_builder --cache-from ${IMAGETAG}_${TARGETARCH}_buildcache  -t  ${IMAGETAG}_${TARGETARCH}_builder $buildstring -f "Dockerfile.${IMAGETAG_SHORT}_real"  ;
      docker rmi ${IMAGETAG}_${TARGETARCH}_builder
      ### our arch ..
@@ -75,6 +76,7 @@ echo timeout 5000 time docker buildx build  --output=type=registry,push=true --p
      test -e /tmp/buildout_${IMAGETAG}_${TARGETARCH}_builder && test -e /tmp/buildout_${IMAGETAG}_${TARGETARCH}_builder/binaries.tgz && mv /tmp/buildout_${IMAGETAG}_${TARGETARCH}_builder/binaries.tgz .
      test -e /tmp/buildout_${IMAGETAG}_${TARGETARCH}_builder && rm -rf "/tmp/buildout_${IMAGETAG}_${TARGETARCH}_builder"
      test -e binaries.tgz || echo "ERROR: NO BINARIES"
+     test -e binaries.tgz || exit 1
 ### final (prod) image
      test -e binaries.tgz && cp binaries.tgz build/hardened-dropbear-$IMAGETAG_SHORT.$TARGETARCH.tar.gz &&  (  (grep ^FROM "${DFILENAME}" |tail -n1;echo "ADD hardened-dropbear-$IMAGETAG_SHORT.$TARGETARCH.tar.gz /";echo "RUN (dropbear --help 2>&1 || true )|grep -e ommand -e assword"  ) |timeout 5000 time docker buildx build  --output=type=registry,push=true --push  --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${BUILDARCH} --cache-from ${IMAGETAG}_${TARGETARCH}_buildcache_baseimage  --cache-from ${IMAGETAG}_${TARGETARCH}_baseimage --cache-from ${IMAGETAG}_${TARGETARCH}_builder --cache-from ${IMAGETAG}_${TARGETARCH}_buildcache  -t  ${IMAGETAG}_${TARGETARCH} $buildstring -f - );
      test -e build/hardened-dropbear-$IMAGETAG_SHORT.$TARGETARCH.tar.gz && rm build/hardened-dropbear-$IMAGETAG_SHORT.$TARGETARCH.tar.gz
