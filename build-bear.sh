@@ -56,7 +56,7 @@ tail -n 1 "/$beartarget/src/default_options.h"|grep -q "$(tail -n 1 /tmp/.bear_c
 
 export PREFIX=/usr
 export CC='ccache gcc'
-
+which install
 echo CONFIG_AUTOMAKE
 ( cd "/$beartarget" && pwd && autoconf 2>&1  &&  autoheader  2>&1 && autoreconf -i 2>&1 )| tee /tmp/.autoconfres|sed 's/$/ → /g'|tr -d '\n'  
 grep -e error: /tmp/.autoconfres && exit 123
