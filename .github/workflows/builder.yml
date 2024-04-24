@@ -44,7 +44,8 @@ jobs:
   # See also https://docs.docker.com/docker-hub/builds/
   upstream:
     runs-on: ubuntu-latest
-    container: quay.io/thefoundation/library:docker-with-buildx
+    #container: quay.io/thefoundation/library:docker-with-buildx
+    container: ghcr.io/thefoundation/github-action-push-to-another-repository
     environment: build
     permissions:
       packages: read
@@ -62,7 +63,7 @@ jobs:
              (echo "# Builder FOR  https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }} ";echo ;cat README.md )> downstream/README.md
 #      - uses: cpina/github-action-push-to-another-repository@main
       - uses: TheFoundation/github-action-push-to-another-repository@main
-        container: ghcr.io/thefoundation/github-action-push-to-another-repository
+#        container: ghcr.io/thefoundation/github-action-push-to-another-repository
         env:
           SSH_DEPLOY_KEY: ${{ secrets.SYNC_PUSH_KEY }}
 #          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
