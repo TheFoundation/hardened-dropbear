@@ -61,6 +61,10 @@ echo timeout 5000 time docker buildx build  --output=type=registry,push=true --p
      #grep -v -e COPY -e build-bear "${DFILENAME}"  > "${DFILENAME}_baseimage"      
      #cp "${DFILENAME}_baseimage" "builder_baseimage/${DFILENAME}_baseimage"
      grep -v -e COPY -e build-bear "${DFILENAME}"  > "builder_baseimage/Dockerfile.${IMAGETAG_SHORT}_baseimage"
+     BSIMGTAG=${IMAGETAG}_${TARGETARCH}_baseimage
+     RLIMGTAG=${IMAGETAG}_${TARGETARCH}_builder
+     BSICACHE=${IMAGETAG}_${TARGETARCH}_baseimage_cache
+     RLICACHE=${IMAGETAG}_${TARGETARCH}_builder_cache
      echo "BUILD_BASEIMAGE for Dockerfile.${IMAGETAG_SHORT} $BUILDARCH"
      (   cd builder_baseimage/;   timeout 5000 time docker buildx build  --output=type=registry,push=true --push  --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${BUILDARCH} --cache-from ${BSIMGTAG} --cache-from ${BSICACHE} --cache-from ${RLIMGTAG} --cache-from ${RLICACHE}  --cache-to ${BSICACHE}  -t   ${BSIMGTAG} $buildstring -f "Dockerfile.${IMAGETAG_SHORT}_baseimage" )
      rm -rf builder_baseimage 
@@ -69,10 +73,7 @@ echo timeout 5000 time docker buildx build  --output=type=registry,push=true --p
 
      ( echo "FROM ${BSIMGTAG}";grep -v -e ^FROM -e "apk add" -e "apt " -e "apt-get" "${DFILENAME}")  > "Dockerfile.${IMAGETAG_SHORT}_real" 
      echo "BUILD_REAL_IMAGE for Dockerfile.${IMAGETAG_SHORT} $BUILDARCH"
-     BSIMGTAG=${IMAGETAG}_${TARGETARCH}_baseimage
-     RLIMGTAG=${IMAGETAG}_${TARGETARCH}_builder
-     BSICACHE=${IMAGETAG}_${TARGETARCH}_baseimage_cache
-     RLICACHE=${IMAGETAG}_${TARGETARCH}_builder_cache
+
      timeout 5000 time docker buildx build  --output=type=registry,push=true --push  --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${BUILDARCH} --cache-from ${BSIMGTAG} --cache-from ${BSICACHE} --cache-from ${RLIMGTAG} --cache-from ${RLICACHE}  --cache-to ${RLICACHE}  -t   ${RLIMGTAG} $buildstring -f "Dockerfile.${IMAGETAG_SHORT}_real"  ;
      #docker rmi ${IMAGETAG}_${TARGETARCH}_builder
      ### our arch ..
