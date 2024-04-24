@@ -77,7 +77,12 @@ echo "###############################################"
 echo "$installresult"
 echo "###############################################"
 
-KEEPFILES=$(echo "$installresult"|grep ^install|grep -v '^install -'|while read line;do file=$(echo "$line"|cut -d" " -f2);dir=$(echo "$line"|cut -d" " -f3);echo $dir"/"$file;done )
+#KEEPFILES=$(echo "$installresult"|grep ^install|grep -v '^install -'|while read line;do file=$(echo "$line"|cut -d" " -f2);dir=$(echo "$line"|cut -d" " -f3);echo $dir"/"$file;done )
+KEEPFILES=$(
+    for srchfile in scp dropbear dbclient dropbearkey dropbearconvert;do
+        find /usr/sbin/ /usr/bin/ -name $srchfile -executable -type f|head -n1
+    done
+    )
 echo "$KEEPFILES"
 [[ -z "$KEEPFILES" ]] || $PFX tar cvzf /binaries.tgz $KEEPFILES
 
@@ -88,12 +93,15 @@ echo "###############################################"
 #find /|grep ccache
 #echo "$HOME" 
 #ls "$HOME"/.ccache
-caches=$($PFX find /root/ /home/*/ -maxdepth 1 -name .ccache  -type d)
+CACHESRCH=""
+test -e /home && CACHESRCH="/home/*/"
+caches=$($PFX find /root/ $CACHESRCH -maxdepth 1 -name .ccache  -type d)
 [[ -z "$caches" ]] || (
     echo "saving ccache: "$(bash -c "$PFX tar cvzf /tmp/ccache."$(uname -m)".tgz $caches"| wc -l)" files..."
     echo "saving buildcache: "$(tar cvzf /ccache.tgz "$beartarget" /tmp/ccache.$(uname -m).tgz| wc -l)" files..."
  )
 
+test -e /binaries.tgz||exit 252
 tar tvzf /binaries.tgz 
 echo  "SIZE_KBYTE:"
 du -k /binaries.tgz 
