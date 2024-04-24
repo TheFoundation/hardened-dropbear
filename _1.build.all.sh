@@ -57,10 +57,10 @@ echo timeout 5000 time docker buildx build  --output=type=registry,push=true --p
      (
      test -e binaries.tgz && rm binaries.tgz
      ## first image named _baseimage does only apt/apk installs
-     grep -v -e COPY -e build-bear "${DFILENAME}"  > "${DFILENAME}_baseimage" 
-     mkdir builder_baseimage
-     mkdir  builder_baseimage/build
-     mv "${DFILENAME}_baseimage" "builder_baseimage/${DFILENAME}_baseimage"
+     mkdir -p   builder_baseimage/build
+     #grep -v -e COPY -e build-bear "${DFILENAME}"  > "${DFILENAME}_baseimage"      
+     #cp "${DFILENAME}_baseimage" "builder_baseimage/${DFILENAME}_baseimage"
+     grep -v -e COPY -e build-bear "${DFILENAME}"  > "builder_baseimage/${DFILENAME}_baseimage"
      (   cd builder_baseimage/;   timeout 5000 time docker buildx build  --output=type=registry,push=true --push  --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${BUILDARCH} --cache-to ${IMAGETAG}_${TARGETARCH}_buildcache_baseimage --cache-from ${IMAGETAG}_${TARGETARCH}_buildcache_baseimage  --cache-from ${IMAGETAG}_${TARGETARCH}_baseimage --cache-from ${IMAGETAG}_${TARGETARCH}_builder --cache-from ${IMAGETAG}_${TARGETARCH}_buildcache -t  ${IMAGETAG}_${TARGETARCH}_baseimage $buildstring -f "${DFILENAME}_baseimage" )
      rm -rf builder_baseimage 
      # second image name _builder is the full thingy ( will be large . .)
