@@ -1,7 +1,7 @@
 #!/bin/bash
 [[ -z "$PLATFORMS_ALPINE" ]] || BUILD_TARGET_PLATFORMS=$PLATFORMS_ALPINE
 [[ -z "$BUILD_TARGET_PLATFORMS" ]] && BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64"
-__platform_tag() { echo "$1"|sed 's~/~_~g' ;};
+_platform_tag() { echo "$1"|sed 's~/~_~g' ;};
 _oneline()               { tr -d '\n' ; } ;
 _buildx_arch()           { case "$(uname -m)" in aarch64) echo linux/arm64;; x86_64) echo linux/amd64 ;; armv7l|armv7*) echo linux/arm/v7;; armv6l|armv6*) echo linux/arm/v6;;  esac ; } ;
 
