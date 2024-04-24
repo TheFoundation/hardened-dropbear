@@ -4,9 +4,9 @@ concurrency:
   cancel-in-progress: true
 on:
   push:
-    branches:
-      - 'master'
-      - 'main'
+#    branches:
+#      - 'master'
+#      - 'main'
   schedule:
     - cron: '0 0 1 * *'
 # Run monthly, at 00:00 on the 1st day of month.
