@@ -95,9 +95,9 @@ echo timeout 5000 time docker buildx build  --output=type=registry,push=true --p
      test -e build/hardened-dropbear-$IMAGETAG_SHORT.$TARGETARCH.tar.gz && rm build/hardened-dropbear-$IMAGETAG_SHORT.$TARGETARCH.tar.gz
      test -e binaries.tgz && mv binaries.tgz ${startdir}/hardened-dropbear-$IMAGETAG_SHORT.$TARGETARCH.tar.gz
      
-    ) &
+    ) 
      
-)
+) &
 done
 done
 wait 
