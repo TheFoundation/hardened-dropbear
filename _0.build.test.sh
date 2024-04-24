@@ -90,7 +90,7 @@ echo timeout 5000 time docker buildx build  --output=type=registry,push=true --p
      docker rmi ${RLIMGTAG} 
     ) 2>&1
      
-)  2>&1|sed 's/^/'$(echo ${IMAGETAG}_${TARGETARCH}|sed 's~/~_~g')':/g' &
+)  2>&1|sed 's/^/'$(echo ${IMAGETAG}_${TARGETARCH}|sed 's~/~_~g;s/. \+://g')':/g' &
 done
 done
 wait 
