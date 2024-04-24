@@ -33,6 +33,7 @@ for BUILDARCH in $ARCHLIST;do
 TARGETARCH=$(_platform_tag $BUILDARCH  )
 TARGETDIR=builds/${IMAGETAG_SHORT}"_"$TARGETARCH
 echo "building to "$TARGETDIR
+(
 mkdir -p "$TARGETDIR"
 cd "$TARGETDIR"
 mkdir build
@@ -81,7 +82,7 @@ echo timeout 5000 time docker buildx build  --output=type=registry,push=true --p
      
     ) &
      
-
+)
 done
 done
 wait 

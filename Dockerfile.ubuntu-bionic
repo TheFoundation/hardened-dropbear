@@ -4,4 +4,4 @@ COPY dropbear-src /usr/src/dropbear
 COPY build-bear.sh /etc/build-bear.sh
 COPY ccache.tgz /ccache.tgz
 RUN bash -c "time bash /etc/build-bear.sh" 
-#&&  rm -rf /usr/src/dropbear && apt-get remove -y  build-essential git zlib1g-dev gcc ccache make autoconf libc-dev pkg-config && apt-get -y autoremove && apt-get clean all &&  df -m /
+#&&  rm -rf /usr/src/dropbear && apt-get remove -y  build-essential git zlib1g-dev gcc ccache make autoconf libc-dev pkg-config shtool && apt-get -y autoremove && apt-get clean all &&  df -m /
