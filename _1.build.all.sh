@@ -94,7 +94,7 @@ echo timeout 5000 time docker buildx build  --output=type=registry,push=true --p
      test -e binaries.tgz && cp binaries.tgz build/hardened-dropbear-$IMAGETAG_SHORT.$TARGETARCH.tar.gz &&  (  (grep ^FROM "${DFILENAME}" |tail -n1;echo "ADD hardened-dropbear-$IMAGETAG_SHORT.$TARGETARCH.tar.gz /";echo "RUN (dropbear --help 2>&1 || true )|grep -e ommand -e assword"  ) |timeout 5000 time docker buildx build  --output=type=registry,push=true --push  --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${BUILDARCH} --cache-from ${BSICACHE}  --cache-from ${RLICACHE}  --cache-to ${RLICACHE}  -t ${IMAGETAG}_${TARGETARCH} $buildstring -f - );
      test -e build/hardened-dropbear-$IMAGETAG_SHORT.$TARGETARCH.tar.gz && rm build/hardened-dropbear-$IMAGETAG_SHORT.$TARGETARCH.tar.gz
      test -e binaries.tgz && mv binaries.tgz ${startdir}/hardened-dropbear-$IMAGETAG_SHORT.$TARGETARCH.tar.gz
-     
+     docker rmi ${RLIMGTAG} 
     ) 
      
 ) &
