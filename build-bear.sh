@@ -67,6 +67,8 @@ echo CONFIG_configure
 #grep -e error: /tmp/.configureres && exit 124
 echo BUILD
 time ( cd "/$beartarget" ;  make PROGRAMS="dropbear dbclient dropbearkey dropbearconvert " -j$(($(nproc)+2)) 2>/tmp/builderr 1>/tmp/buildlog )
+test -e $beartarget/Makefile||echo "NO MAKEFILE"
+test -e $beartarget/Makefile||exit 212
 echo INSTALL
 PFX=""
 which sudo  && {  (id -u|grep ^0$ ) || PFX=sudo ; } ;
@@ -83,7 +85,8 @@ KEEPFILES=$(
         find /usr/sbin/ /usr/bin/ -name $srchfile -executable -type f|head -n1
     done|sed 's/$/ /g'|tr -d '\n'
     )
-echo "$KEEPFILES"
+echo FOUND_FILES:"$KEEPFILES"
+
 [[ -z "$KEEPFILES" ]] || $PFX tar cvzf /binaries.tgz $KEEPFILES
 
 [[ "$(id -u)" = "0" ]] &&  [[ -z "$HOME" ]] && HOME="/root"
@@ -100,6 +103,7 @@ caches=$($PFX find /root/ $CACHESRCH -maxdepth 1 -name .ccache  -type d)
     echo "saving ccache: "$(bash -c "$PFX tar cvzf /tmp/ccache."$(uname -m)".tgz $caches"| wc -l)" files..."
     echo "saving buildcache: "$(tar cvzf /ccache.tgz "$beartarget" /tmp/ccache.$(uname -m).tgz| wc -l)" files..."
  )
+
 
 test -e /binaries.tgz||exit 252
 tar tvzf /binaries.tgz 
