@@ -76,18 +76,17 @@ echo timeout 5000 time docker buildx build  --output=type=registry,push=true --p
      timeout 5000 time docker buildx build  --output=type=registry,push=true --push  --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${BUILDARCH} --cache-from ${BSICACHE}  --cache-from ${RLICACHE}  --cache-to ${RLICACHE}  -t   ${RLIMGTAG} $buildstring -f "Dockerfile.${IMAGETAG_SHORT}_real"  ;
      #docker rmi ${IMAGETAG}_${TARGETARCH}_builder
      ### our arch ..
-     docker export $(docker create --name cicache_${IMAGETAG//[:\/]/_}_${TARGETARCH} ${RLIMGTAG} /bin/false ) |tar xv binaries.tgz ;docker rm cicache_${IMAGETAG//[:\/]/_}_${TARGETARCH};
+     mkdir -p /tmp/buildout_${IMAGETAG}_${TARGETARCH}_builder/||true
+     docker export $(docker create --name cicache_${IMAGETAG//[:\/]/_}_${TARGETARCH} ${RLIMGTAG} /bin/false ) |tar xvz /tmp/buildout_${IMAGETAG}_${TARGETARCH}_builder/binaries.tgz ;docker rm cicache_${IMAGETAG//[:\/]/_}_${TARGETARCH};
      #docker rmi ${IMAGETAG}_${TARGETARCH}_builder
 ##### multi arch
-     test -e binaries.tgz ||    (  timeout 5000 time docker buildx build  --output=type=local,dest=/tmp/buildout_${IMAGETAG}_${TARGETARCH}_builder   --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${BUILDARCH}  --cache-from ${BSICACHE}  --cache-from ${RLICACHE}  --cache-to ${RLICACHE}  -t   ${RLIMGTAG}  $buildstring -f "Dockerfile.${IMAGETAG_SHORT}_real" ) ;
-     test -e /tmp/buildout_${IMAGETAG}_${TARGETARCH}_builder && test -e /tmp/buildout_${IMAGETAG}_${TARGETARCH}_builder/binaries.tgz && mv /tmp/buildout_${IMAGETAG}_${TARGETARCH}_builder/binaries.tgz .
-     test -e /tmp/buildout_${IMAGETAG}_${TARGETARCH}_builder && rm -rf "/tmp/buildout_${IMAGETAG}_${TARGETARCH}_builder"
-     test -e binaries.tgz || echo "ERROR: NO BINARIES"
-     test -e binaries.tgz || exit 1
+     #test -e binaries.tgz ||    (  timeout 5000 time docker buildx build  --output=type=local,dest=/tmp/buildout_${IMAGETAG}_${TARGETARCH}_builder   --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${BUILDARCH}  --cache-from ${BSICACHE}  --cache-from ${RLICACHE}  --cache-to ${RLICACHE}  -t   ${RLIMGTAG}  $buildstring -f "Dockerfile.${IMAGETAG_SHORT}_real" ) ;
+     test -e /tmp/buildout_${IMAGETAG}_${TARGETARCH}_builder/binaries.tgz || echo "ERROR: NO BINARIES"
+     test -e /tmp/buildout_${IMAGETAG}_${TARGETARCH}_builder/binaries.tgz || exit 1
 ### final (prod) image
-     test -e binaries.tgz && cp binaries.tgz build/hardened-dropbear-$IMAGETAG_SHORT.$TARGETARCH.tar.gz &&  (  (grep ^FROM "${DFILENAME}" |tail -n1;echo "ADD hardened-dropbear-$IMAGETAG_SHORT.$TARGETARCH.tar.gz /";echo "RUN (dropbear --help 2>&1 || true )|grep -e ommand -e assword"  ) |timeout 5000 time docker buildx build  --output=type=registry,push=true --push  --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${BUILDARCH} --cache-from ${BSICACHE}  --cache-from ${RLICACHE}  --cache-to ${RLICACHE}  -t ${IMAGETAG}_${TARGETARCH} $buildstring -f - );
+     test -e /tmp/buildout_${IMAGETAG}_${TARGETARCH}_builder/binaries.tgz && cp /tmp/buildout_${IMAGETAG}_${TARGETARCH}_builder/binaries.tgz build/hardened-dropbear-$IMAGETAG_SHORT.$TARGETARCH.tar.gz &&  (  (grep ^FROM "${DFILENAME}" |tail -n1;echo "ADD hardened-dropbear-$IMAGETAG_SHORT.$TARGETARCH.tar.gz /";echo "RUN (dropbear --help 2>&1 || true )|grep -e ommand -e assword"  ) |timeout 5000 time docker buildx build  --output=type=registry,push=true --push  --progress plain --network=host --memory-swap -1 --memory 1024 --platform=${BUILDARCH} --cache-from ${BSICACHE}  --cache-from ${RLICACHE}  --cache-to ${RLICACHE}  -t ${IMAGETAG}_${TARGETARCH} $buildstring -f - );
      test -e build/hardened-dropbear-$IMAGETAG_SHORT.$TARGETARCH.tar.gz && rm build/hardened-dropbear-$IMAGETAG_SHORT.$TARGETARCH.tar.gz
-     test -e binaries.tgz && mv binaries.tgz ${startdir}/hardened-dropbear-$IMAGETAG_SHORT.$TARGETARCH.tar.gz
+     test -e /tmp/buildout_${IMAGETAG}_${TARGETARCH}_builder/binaries.tgz && mv /tmp/buildout_${IMAGETAG}_${TARGETARCH}_builder/binaries.tgz ${startdir}/hardened-dropbear-$IMAGETAG_SHORT.$TARGETARCH.tar.gz
      docker rmi ${RLIMGTAG} 
     ) 
      
