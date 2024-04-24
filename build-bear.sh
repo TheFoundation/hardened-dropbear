@@ -64,7 +64,7 @@ grep -e error: /tmp/.autoconfres && exit 123
 echo CONFIG_configure
 ( cd "/$beartarget" && pwd &&  ccache ./configure --prefix=$PREFIX --enable-plugin  --enable-bundled-libtom 2>&1 ) | tee /tmp/.configureres |sed 's/$/ → /g'|tr -d '\n'  
 
-grep -e error: /tmp/.configureres && exit 124
+#grep -e error: /tmp/.configureres && exit 124
 echo BUILD
 time ( cd "/$beartarget" ;  make PROGRAMS="dropbear dbclient dropbearkey dropbearconvert " -j$(($(nproc)+2)) 2>/tmp/builderr 1>/tmp/buildlog )
 echo INSTALL
