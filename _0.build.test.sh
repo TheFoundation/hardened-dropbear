@@ -1,7 +1,6 @@
 #!/bin/bash
 [[ -z "$PLATFORMS_ALPINE" ]] || BUILD_TARGET_PLATFORMS=$PLATFORMS_ALPINE
 [[ -z "$BUILD_TARGET_PLATFORMS" ]] && BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64"
-
 __platform_tag() { echo "$1"|sed 's~/~_~g' ;};
 _oneline()               { tr -d '\n' ; } ;
 _buildx_arch()           { case "$(uname -m)" in aarch64) echo linux/arm64;; x86_64) echo linux/amd64 ;; armv7l|armv7*) echo linux/arm/v7;; armv6l|armv6*) echo linux/arm/v6;;  esac ; } ;
@@ -24,8 +23,7 @@ PROJECT_NAME=hardened-dropbear
 
 
 #docker build . --progress plain -f Dockerfile.alpine -t $IMAGETAG
-[[ -z "$ARCHLIST" ]] && ARCHLIST=$(echo $BUILD_TARGET_PLATFORMS |sed 's/,/ /g') 
-for BUILDARCH in $ARCHLIST;do
+for BUILDARCH in linux/amd64 linux/arm64;do
 TARGETARCH=$(_platform_tag $BUILDARCH  )
 TARGETDIR=builds/${IMAGETAG_SHORT}"_"$TARGETARCH
 echo "building to "$TARGETDIR
