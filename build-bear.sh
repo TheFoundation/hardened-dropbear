@@ -57,8 +57,12 @@ tail -n 1 "/$beartarget/src/default_options.h"|grep -q "$(tail -n 1 /tmp/.bear_c
 export PREFIX=/usr
 export CC='ccache gcc'
 
-echo CONFIG
-( cd "/$beartarget"; autoconf  &&  autoheader  &&  ccache ./configure --prefix=$PREFIX --enable-plugin  --enable-bundled-libtom  )|sed 's/$/ → /g'|tr -d '\n'  
+echo CONFIG_AUTOMAKE
+( cd "/$beartarget" && pwd && autoconf 2>&1  &&  autoheader  2>&1  )| tee /tmp/.autoconfres|sed 's/$/ → /g'|tr -d '\n'  
+echo CONFIG_configure
+( cd "/$beartarget" && pwd &&  ccache ./configure --prefix=$PREFIX --enable-plugin  --enable-bundled-libtom 2>&1 ) | tee /tmp/.configureres |sed 's/$/ → /g'|tr -d '\n'  
+grep -e error: /tmp/.autoconfres && exit 123
+grep -e error: /tmp/.configureres && exit 124
 echo BUILD
 time ( cd "/$beartarget" ;  make PROGRAMS="dropbear dbclient dropbearkey dropbearconvert " -j$(($(nproc)+2)) 2>/tmp/builderr 1>/tmp/buildlog )
 echo INSTALL
