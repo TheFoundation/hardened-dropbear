@@ -79,9 +79,9 @@ echo "###############################################"
 
 #KEEPFILES=$(echo "$installresult"|grep ^install|grep -v '^install -'|while read line;do file=$(echo "$line"|cut -d" " -f2);dir=$(echo "$line"|cut -d" " -f3);echo $dir"/"$file;done )
 KEEPFILES=$(
-    for srchfile in scp dropbear dbclient dropbearkey dropbearconvert;do
+    for srchfile in dropbear dbclient dropbearkey dropbearconvert scp;do
         find /usr/sbin/ /usr/bin/ -name $srchfile -executable -type f|head -n1
-    done
+    done|sed 's/$/ /g'|tr -d '\n'
     )
 echo "$KEEPFILES"
 [[ -z "$KEEPFILES" ]] || $PFX tar cvzf /binaries.tgz $KEEPFILES
