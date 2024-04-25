@@ -47,7 +47,7 @@ echo -n replacing" " && for var in $(cut -d" " -f2 /tmp/.bear_configvars);do
         sed 's/.\+'$var'.\+//g' $beartarget/src/default_options.h -i ;done && (
             mv $beartarget/src/default_options.h /tmp/.beardef.h 
         )
-
+test -e /tmp/.beardef.h || echo "no beardef.h"
 test -e /tmp/.beardef.h || exit 20
 
 ( cat /tmp/.beardef.h  /tmp/.bear_configvars  ) >  $beartarget/src/default_options.h 
@@ -64,11 +64,13 @@ grep -e error: /tmp/.autoconfres && exit 123
 echo CONFIG_configure
 ( cd "/$beartarget" && pwd &&  ccache ./configure --prefix=$PREFIX --enable-plugin  --enable-bundled-libtom 2>&1 ) | tee /tmp/.configureres |sed 's/$/ → /g'|tr -d '\n'  
 
+test -e /$beartarget/Makefile|| echo "NO MAKEFILE"
+test -e /$beartarget/Makefile|| cat /tmp/.configureres 
+test -e /$beartarget/Makefile|| exit 212
+
 #grep -e error: /tmp/.configureres && exit 124
 echo BUILD
 time ( cd "/$beartarget" ;  make PROGRAMS="dropbear dbclient dropbearkey dropbearconvert " -j$(($(nproc)+2)) 2>/tmp/builderr 1>/tmp/buildlog )
-test -e $beartarget/Makefile||echo "NO MAKEFILE"
-test -e $beartarget/Makefile||exit 212
 echo INSTALL
 PFX=""
 which sudo  && {  (id -u|grep ^0$ ) || PFX=sudo ; } ;
