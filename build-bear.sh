@@ -114,7 +114,7 @@ du -k /binaries.tgz
 
 test -e /ccache.tgz  && du -k /ccache.tgz 
 
-(echo "$installresult"|grep -q "install dropbear /")|| exit 222
+(echo "$installresult"|grep -q -e "/usr/bin/install -c dropbear /usr/sbin" -e "install dropbear /")|| exit 222
 exit 0
 
 # || exit 222
